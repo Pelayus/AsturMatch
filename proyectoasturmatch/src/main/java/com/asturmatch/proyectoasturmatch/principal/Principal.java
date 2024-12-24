@@ -1,4 +1,4 @@
-package com.asturmatch.proyectoasturmatch;
+package com.asturmatch.proyectoasturmatch.principal;
 
 import java.time.LocalDate;
 
