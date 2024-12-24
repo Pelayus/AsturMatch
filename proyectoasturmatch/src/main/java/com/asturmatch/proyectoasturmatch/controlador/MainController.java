@@ -10,4 +10,24 @@ public class MainController {
     public String mostrarPaginaPrincipal() {
         return "principal";
     }
+
+    @GetMapping("/torneos")
+    public String torneos() {
+        return "torneos";
+    }
+
+    @GetMapping("/equipos")
+    public String equipos() {
+        return "equipos";
+    }
+
+    @GetMapping("/resultados")
+    public String resultados() {
+        return "resultados";
+    }
+
+    @GetMapping("/contacto")
+    public String contacto() {
+        return "contacto";
+    }
 }

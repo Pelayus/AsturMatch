@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto</title>
+<link rel="stylesheet" href="css/contacto.css">
+</head>
+<body>
+	<header>
+		<h1>Contacto</h1>
+		<ul class="nav-menu">
+			<li><a href="/">Inicio</a></li>
+			<li><a href="/torneos">Torneos</a></li>
+			<li><a href="/equipos">Equipos</a></li>
+			<li><a href="/resultados">Resultados</a></li>
+		</ul>
+	</header>
+	<main>
+		<h2>Estamos aquí para ayudarte</h2>
+		<p>Por favor, completa el siguiente formulario para ponerte en
+			contacto con nosotros.</p>
+		<form action="submit_contact.php" method="POST">
+			<ul>
+				<li><label for="name">Nombre:</label><br> <input
+					type="text" id="name" name="name" required></li>
+				<li><label for="email">Correo Electrónico:</label><br> <input
+					type="email" id="email" name="email" required></li>
+				<li><label for="message">Mensaje:</label><br> <textarea
+						id="message" name="message" rows="5" required></textarea></li>
+			</ul>
+			<button type="submit" class="button">Enviar</button>
+		</form>
+	</main>
+	<footer>
+		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
+	</footer>
+</body>
+</html>
