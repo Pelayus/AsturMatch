@@ -17,5 +17,4 @@ public class Principal implements CommandLineRunner {
 		System.out.println("\t\t\t\t\033[1;35m************************************************\033[0m");
 		System.out.println("\n\t\t\t\033[1;36m-- Bienvenido/a a AsturMatch (Torneos Asturianos Personalizados) --\033[0m");
 	}
-
 }
