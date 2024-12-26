@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión en AsturMatch</title>
+    <link rel="stylesheet" href="css/asturmatch.css">
     <link rel="stylesheet" href="css/iniciosesion.css">
 </head>
 <body>
     <header>
-        <div class="logo">
-            <h1>Inicio de Sesión</h1>
-        </div>
+        <h1>Inicio de Sesión</h1>
         <nav>
             <ul class="nav-menu">
                 <li><a href="/principal">Inicio</a></li>
@@ -36,6 +35,8 @@
                 <div class="input-group">
                     <button type="submit" class="button">Iniciar Sesión</button>
                 </div>
+                <p class="crear-cuenta">¿Aún no tienes cuenta en AsturMatch?</p>
+                <p class="crear-cuenta"><a href="/registro" class="link-registro">Crea una cuenta</a></p>
             </form>
 
             <div th:if="${error}" class="error-message" th:text="${error}"></div>
@@ -43,7 +44,14 @@
     </main>
 
     <footer>
+		<p class="telefonocontacto">+34 608 65 53 49</p>
+		<br>
+		<div class="redessociales">
+          <a href="#"><img src="media/facebook.png" alt="Facebook" /></a>
+          <a href="#"><img src="media/x.png" alt="X" /></a>
+          <a href="#"><img src="media/instagram.png" alt="Instagram" /></a>
+        </div>
         <p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
-    </footer>
+	</footer>
 </body>
 </html>

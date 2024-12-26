@@ -1,0 +1,131 @@
+:root {
+    --color-principal: #4CAF50;
+    --color-principal-hover: #79e63a;
+    --color-secundario: #333;
+    --color-secundario-hover: #5eb32a;
+    --color-texto-claro: white;
+    --color-texto-oscuro: #333;
+    --color-texto-secundario: #555;
+    --color-fondo: #f4f4f9;
+
+    --font-familia: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-subtitulo: 1.8em;
+    --font-texto: 1.2em;
+
+    --padding-contenedor: 40px 20px;
+    --margin-contenedor: 20px 0;
+    --espacio-botones: 20px;
+
+    --borde-radio: 5px;
+    --sombra-caja: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --transicion: 0.3s ease;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-familia);
+    background-color: var(--color-fondo);
+    color: var(--color-texto-oscuro);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--color-principal);
+    padding: 20px 0;
+    margin: 0;
+    text-align: center;
+    box-shadow: var(--sombra-caja);
+}
+
+nav {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+
+.nav-menu li {
+    margin: 0 20px;
+}
+
+.nav-menu a {
+    color: var(--color-texto-claro);
+    text-decoration: none;
+    font-size: var(--font-texto);
+    padding: 8px 12px;
+    border-radius: var(--borde-radio);
+    transition: background-color var(--transicion), color var(--transicion);
+}
+
+.nav-menu a:hover {
+    background-color: var(--color-principal-hover);
+    color: var(--color-texto-oscuro);
+}
+
+.nav-menu a.active {
+    background-color: var(--color-principal-hover);
+    color: var(--color-texto-oscuro);
+}
+
+main {
+    padding: var(--padding-contenedor);
+    text-align: center;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--espacio-botones);
+}
+
+.button {
+    display: inline-block;
+    background-color: var(--color-principal-hover);
+    color: var(--color-texto-oscuro);
+    text-decoration: none;
+    padding: 12px 18px;
+    border-radius: var(--borde-radio);
+    font-size: var(--font-texto);
+    transition: background-color var(--transicion), transform 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: var(--color-secundario-hover);
+    color: var(--color-texto-claro);
+    transform: translateY(-3px);
+}
+
+footer {
+    background-color: var(--color-secundario);
+    color: var(--color-texto-claro);
+    text-align: center;
+    padding: 15px 0;
+    margin-top: var(--margin-contenedor);
+    font-size: 0.9em;
+}
+
+.telefonocontacto {
+    margin: 0;
+    font-size: 14px;
+}
+
+.redessociales {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.redessociales a img {
+    height: 25px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+.redessociales a img:hover {
+    transform: scale(1.2);
+}

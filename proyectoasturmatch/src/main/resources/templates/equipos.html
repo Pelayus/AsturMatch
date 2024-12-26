@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Equipos - AsturMatch</title>
+<link rel="stylesheet" href="css/asturmatch.css">
 <link rel="stylesheet" href="css/equipos.css">
 </head>
 <body>
@@ -18,11 +19,22 @@
 			</ul>
 		</nav>
 	</header>
+	
 	<main>
 		<h2>Lista de Equipos</h2>
 		<p>Aquí puedes ver y crear tus equipos</p>
 		<li><a th:href="@{/equipos-crear}">Crear equipo</a></li>
 	</main>
-	<footer> &copy; 2024 AsturMatch. Todos los derechos reservados. </footer>
+	
+	<footer>
+		<p class="telefonocontacto">+34 608 65 53 49</p>
+		<br>
+		<div class="redessociales">
+          <a href="#"><img src="media/facebook.png" alt="Facebook" /></a>
+          <a href="#"><img src="media/x.png" alt="X" /></a>
+          <a href="#"><img src="media/instagram.png" alt="Instagram" /></a>
+        </div>
+        <p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
+	</footer>
 </body>
 </html>
