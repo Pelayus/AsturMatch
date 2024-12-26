@@ -9,6 +9,8 @@ public interface ServicioUsuario {
 	List<Usuario> obtenerTodosUsuarios();
 
     Optional<Usuario> obtenerUsuarioPorId(Long id);
+    
+    Usuario obtenerUsuarioPorEmail(String email);
 
     Usuario guardarUsuario(Usuario usuario);
 

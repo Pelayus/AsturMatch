@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.UsuarioRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
@@ -30,11 +31,20 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     public Optional<Usuario> obtenerUsuarioPorId(Long id) {
         return repositorioUsuario.findById(id);
     }
+    
+    @Override
+    @Transactional
+    public Usuario obtenerUsuarioPorEmail(String email) {
+        return repositorioUsuario.findByEmail(email); 
+    }
 
     @Override
     @Transactional
     public Usuario guardarUsuario(Usuario usuario) {
-        validarUsuario(usuario);
+    	validarUsuario(usuario);
+        if (usuario.getRol() == null) {
+            usuario.setRol(Rol.JUGADOR); // Asigno por defecto el rol de JUGADOR 
+        }
         return repositorioUsuario.save(usuario);
     }
 

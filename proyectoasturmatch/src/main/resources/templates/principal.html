@@ -8,7 +8,9 @@
 </head>
 <body>
     <header>
-        <h1>AsturMatch</h1>
+        <div class="logo">
+            <h1>AsturMatch</h1>
+        </div>
         <nav>
             <ul class="nav-menu">
                 <li><a href="/torneos">Torneos</a></li>
@@ -18,14 +20,24 @@
             </ul>
         </nav>
     </header>
+
     <main>
-        <p class="intro">Bienvenido/a a AsturMatch, el mejor lugar para crear torneos deportivos en Asturias. ¡Únete y crea tus propias competiciones hoy mismo!</p>
-        <a href="/inicio" class="button">Comenzar</a>
+        <section class="welcome-message">
+            <h1 th:text="${mensajeBienvenida}"></h1>
+            <p>¡Descubre, compite y sigue los mejores torneos de la comunidad de Asturias!</p>
+        </section>
+
+        <section class="cta-buttons">
+            <a href="/iniciosesion" class="button">Iniciar Sesión</a>
+            <a href="/registro" class="button">Registrarse</a>
+        </section>
     </main>
+
     <footer>
-        &copy; 2024 AsturMatch. Todos los derechos reservados.
+        <p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
     </footer>
 </body>
 </html>
+
 
 

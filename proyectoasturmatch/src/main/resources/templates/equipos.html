@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos - AsturMatch</title>
-    <link rel="stylesheet" href="css/equipos.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipos - AsturMatch</title>
+<link rel="stylesheet" href="css/equipos.css">
 </head>
 <body>
-    <header>
-        <h1>Equipos</h1>
-        <nav>
-            <ul class="nav-menu">
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/torneos">Torneos</a></li>
-                <li><a href="/resultados">Resultados</a></li>
-                <li><a href="/contacto">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h2>Lista de Equipos</h2>
-        <p>Aquí puedes ver y crear tus equipos</p>
-    </main>
-    <footer>
-        &copy; 2024 AsturMatch. Todos los derechos reservados.
-    </footer>
+	<header>
+		<h1>Equipos</h1>
+		<nav>
+			<ul class="nav-menu">
+				<li><a href="/principal">Inicio</a></li>
+				<li><a href="/torneos">Torneos</a></li>
+				<li><a href="/resultados">Resultados</a></li>
+				<li><a href="/contacto">Contacto</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<h2>Lista de Equipos</h2>
+		<p>Aquí puedes ver y crear tus equipos</p>
+		<li><a th:href="@{/equipos-crear}">Crear equipo</a></li>
+	</main>
+	<footer> &copy; 2024 AsturMatch. Todos los derechos reservados. </footer>
 </body>
 </html>
