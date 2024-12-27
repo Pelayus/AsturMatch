@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrarse en AsturMatch</title>
-    <link rel="stylesheet" href="css/asturmatch.css">
-    <link rel="stylesheet" href="css/registro.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrarse en AsturMatch</title>
+<link rel="stylesheet" href="css/asturmatch.css">
+<link rel="stylesheet" href="css/registro.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <h1>Registro Usuario</h1>
-        </div>
-        <nav>
-            <ul class="nav-menu">
-                <li><a href="/principal">Inicio</a></li>
-                <li><a href="/torneos">Torneos</a></li>
-                <li><a href="/resultados">Resultados</a></li>
-                <li><a href="/contacto">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
+	<header>
+		<h1>Registro Usuario</h1>
+	</header>
 
-    <main>
-        <div class="form-container">
-            <h2>¡Regístrate y empieza a disfrutar de AsturMatch!</h2>
-            <form th:action="@{/registro}" method="post" class="form">
-                <div class="input-group">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
-                </div>
-                <div class="input-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required placeholder="Tu correo electrónico">
-                </div>
-                <div class="input-group">
-                    <label for="contraseña">Contraseña:</label>
-                    <input type="password" id="contraseña" name="contraseña" required placeholder="Tu contraseña">
-                </div>
-                <div class="input-group">
-                    <button type="submit" class="button">Registrarse</button>
-                </div>
-                <p class="iniciarsesion">¿Ya tienes cuenta con AsturMatch?</p>
-                <p class="iniciarsesion"><a href="/iniciosesion" class="link-iniciosesion">Iniciar Sesión</a></p>
-            </form>
-        </div>
-    </main>
+	<main>
+		<div class="form-container">
+			<h2>¡Regístrate y empieza a disfrutar de AsturMatch!</h2>
+			<form th:action="@{/registro}" method="post" class="form">
+				<div class="input-group">
+					<label for="nombre">Nombre:</label> <input type="text" id="nombre"
+						name="nombre" required placeholder="Tu nombre completo">
+				</div>
+				<div class="input-group">
+					<label for="email">Email:</label> <input type="email" id="email"
+						name="email" required placeholder="Tu correo electrónico">
+				</div>
+				<div class="input-group">
+					<label for="contraseña">Contraseña:</label> <input type="password"
+						id="contraseña" name="contraseña" required
+						placeholder="Tu contraseña">
+				</div>
+				<div class="input-group">
+					<button type="submit" class="button">Registrarse</button>
+				</div>
+				<p class="iniciarsesion">¿Ya tienes cuenta con AsturMatch?</p>
+				<p class="iniciarsesion">
+					<a href="/iniciosesion" class="link-iniciosesion">Iniciar
+						Sesión</a>
+				</p>
+			</form>
+		</div>
+	</main>
 
-    <footer>
+	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>
 		<br>
 		<div class="redessociales">
-          <a href="#"><img src="media/facebook.png" alt="Facebook" /></a>
-          <a href="#"><img src="media/x.png" alt="X" /></a>
-          <a href="#"><img src="media/instagram.png" alt="Instagram" /></a>
-        </div>
-        <p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
+			<a href="#"><img src="media/facebook.png" alt="Facebook" /></a> <a
+				href="#"><img src="media/x.png" alt="X" /></a> <a href="#"><img
+				src="media/instagram.png" alt="Instagram" /></a>
+		</div>
+		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
 </body>
 </html>

@@ -31,43 +31,28 @@ body {
 
 header {
     background-color: var(--color-principal);
-    padding: 20px 0;
-    margin: 0;
-    text-align: center;
+    padding: 10px 20px;
     box-shadow: var(--sombra-caja);
-}
-
-nav {
-    padding: 10px 0;
-    text-align: center;
 }
 
 .nav-menu {
     list-style: none;
+    display: flex;
+    gap: 20px;
     margin: 0;
     padding: 0;
-    display: inline-flex;
 }
 
-.nav-menu li {
-    margin: 0 20px;
-}
-
-.nav-menu a {
+.nav-menu li a {
     color: var(--color-texto-claro);
     text-decoration: none;
-    font-size: var(--font-texto);
+    font-size: 1rem;
     padding: 8px 12px;
     border-radius: var(--borde-radio);
     transition: background-color var(--transicion), color var(--transicion);
 }
 
-.nav-menu a:hover {
-    background-color: var(--color-principal-hover);
-    color: var(--color-texto-oscuro);
-}
-
-.nav-menu a.active {
+.nav-menu li a:hover {
     background-color: var(--color-principal-hover);
     color: var(--color-texto-oscuro);
 }
