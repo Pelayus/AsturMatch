@@ -1,16 +1,27 @@
+header {
+	background-image: url('../media/header_principal.png');
+	background-size: cover;
+	background-position: center;
+	color: black;
+}
+
+header p {
+	font-size: 1.8em;
+    color: blue;
+    text-align:center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
 .welcome-message {
-    margin-bottom: var(--margin-contenedor);
+	margin-bottom: var(--margin-contenedor);
 }
 
 .welcome-message h2 {
-    font-size: var(--font-titulo);
-    color: var(--color-texto-oscuro);
+	font-size: var(--font-titulo);
+	color: var(--color-texto-oscuro);
 }
 
 .welcome-message p {
-    font-size: var(--font-texto);
-    color: var(--color-texto-secundario);
+	font-size: var(--font-texto);
+	color: var(--color-texto-secundario);
 }
-
-
-

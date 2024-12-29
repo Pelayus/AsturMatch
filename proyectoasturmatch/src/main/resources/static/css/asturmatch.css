@@ -30,31 +30,90 @@ body {
 }
 
 header {
-    background-color: var(--color-principal);
-    padding: 10px 20px;
-    box-shadow: var(--sombra-caja);
+	padding: 120px 40px;
+	box-shadow: var(--sombra-caja);
+	margin: 0;
 }
+
+header h1 {
+	color: yellow;
+	font-size: 6em;
+	text-align:center;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.usuario {
+    position: relative;
+    display: block;
+    text-align: right;
+    float: right;
+    margin-right: 80px;
+    margin-top: -60px;
+}
+
+.icono-usuario {
+    background-color: var(--color-secundario);
+    color: var(--color-texto-claro);
+    font-size: 1.5em;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: background-color var(--transicion);
+}
+
+.icono-usuario:hover {
+    background-color: var(--color-secundario-hover);
+}
+
+.datosUsuario-desplegados {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--color-fondo);
+    min-width: 120px;
+    box-shadow: var(--sombra-caja);
+    padding: 10px;
+    z-index: 1;
+    text-align: center;
+    border-radius: var(--borde-radio);
+}
+
+.datosUsuario-desplegados p {
+    margin: 0;
+    font-size: var(--font-texto);
+    color: var(--color-texto-oscuro);
+}
+
 
 .nav-menu {
     list-style: none;
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    gap: 30px;
     margin: 0;
-    padding: 0;
+    padding: 15px 0;
+    background-color: #1B4D89;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .nav-menu li a {
     color: var(--color-texto-claro);
     text-decoration: none;
-    font-size: 1rem;
-    padding: 8px 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 10px 15px;
     border-radius: var(--borde-radio);
     transition: background-color var(--transicion), color var(--transicion);
 }
 
 .nav-menu li a:hover {
-    background-color: var(--color-principal-hover);
-    color: var(--color-texto-oscuro);
+    background-color: var(--color-secundario-hover);
+    color: var(--color-texto-claro);
 }
 
 main {

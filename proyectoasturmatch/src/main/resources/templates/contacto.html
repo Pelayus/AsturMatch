@@ -9,17 +9,24 @@
 </head>
 <body>
 	<header>
+	    <div class="usuario">
+			<button class="icono-usuario" id="BotonUsuario">P</button>
+			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
+				<p th:text="${UsuarioActual}"></p>
+			</div>
+		</div>
 		<h1>Contacto</h1>
-		<h3 th:text="${UsuarioActual}"></h3>
-		<nav>
-			<ul class="nav-menu">
-				<li><a href="/principal">Inicio</a></li>
-				<li><a href="/torneos">Torneos</a></li>
-				<li><a href="/equipos">Equipos</a></li>
-				<li><a href="/resultados">Resultados</a></li>
-			</ul>
-		</nav>
 	</header>
+
+	<nav>
+		<ul class="nav-menu">
+			<li><a href="/principal">Inicio</a></li>
+			<li><a href="/torneos">Torneos</a></li>
+			<li><a href="/equipos">Equipos</a></li>
+			<li><a href="/resultados">Resultados</a></li>
+		</ul>
+	</nav>
+
 
 	<main>
 		<h2>Estamos aquí para ayudarte</h2>
@@ -48,5 +55,7 @@
 		</div>
 		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
+	
+	<script src="js/asturmatch.js"></script>
 </body>
 </html>

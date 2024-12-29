@@ -9,22 +9,24 @@
 </head>
 <body>
 	<header>
-    <div class="header-container">
-        <h1 class="logo">AsturMatch</h1>
-        <h3 th:text="${UsuarioActual}"></h3>
-        <nav>
-            <ul class="nav-menu">
-                <li><a href="/torneos">Torneos</a></li>
-                <li><a href="/equipos">Equipos</a></li>
-                <li><a href="/resultados">Resultados</a></li>
-                <li><a href="/contacto">Contacto</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+		<div class="usuario">
+			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}">P</button>
+			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
+				<p th:text="${UsuarioActual}"></p>
+			</div>
+		</div>
+		<h1>ASTURMATCH</h1>
+		<p>ASTURIAS, ESPAÑA</p>
+	</header>
 
-
-
+	<nav>
+		<ul class="nav-menu">
+			<li><a href="/torneos">Torneos</a></li>
+			<li><a href="/equipos">Equipos</a></li>
+			<li><a href="/resultados">Resultados</a></li>
+			<li><a href="/contacto">Contacto</a></li>
+		</ul>
+	</nav>
 
 	<main>
 		<section class="welcome-message">
@@ -44,6 +46,8 @@
 		</div>
 		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
+	
+	<script src="js/asturmatch.js"></script>
 </body>
 </html>
 

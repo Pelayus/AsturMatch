@@ -1,3 +1,10 @@
+header {
+	background-image: url('../media/header_principal.png');
+	background-size: cover;
+	background-position: center;
+	color: black;
+}
+
 main {
     padding: 20px;
     text-align: center;

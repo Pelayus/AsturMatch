@@ -9,33 +9,42 @@
 </head>
 <body>
 	<header>
+	     <div class="usuario">
+			<button class="icono-usuario" id="BotonUsuario">P</button>
+			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
+				<p th:text="${UsuarioActual}"></p>
+			</div>
+		</div>
 		<h1>Equipos</h1>
-		<h3 th:text="${UsuarioActual}"></h3>
-		<nav>
-			<ul class="nav-menu">
-				<li><a href="/principal">Inicio</a></li>
-				<li><a href="/torneos">Torneos</a></li>
-				<li><a href="/resultados">Resultados</a></li>
-				<li><a href="/contacto">Contacto</a></li>
-			</ul>
-		</nav>
 	</header>
-	
+
+	<nav>
+		<ul class="nav-menu">
+			<li><a href="/principal">Inicio</a></li>
+			<li><a href="/torneos">Torneos</a></li>
+			<li><a href="/resultados">Resultados</a></li>
+			<li><a href="/contacto">Contacto</a></li>
+		</ul>
+	</nav>
+
+
 	<main>
 		<h2>Lista de Equipos</h2>
 		<p>Aquí puedes ver y crear tus equipos</p>
 		<li><a th:href="@{/equipos-crear}">Crear equipo</a></li>
 	</main>
-	
+
 	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>
 		<br>
 		<div class="redessociales">
-          <a href="#"><img src="media/facebook.png" alt="Facebook" /></a>
-          <a href="#"><img src="media/x.png" alt="X" /></a>
-          <a href="#"><img src="media/instagram.png" alt="Instagram" /></a>
-        </div>
-        <p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
+			<a href="#"><img src="media/facebook.png" alt="Facebook" /></a> <a
+				href="#"><img src="media/x.png" alt="X" /></a> <a href="#"><img
+				src="media/instagram.png" alt="Instagram" /></a>
+		</div>
+		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
+	
+	<script src="js/asturmatch.js"></script>
 </body>
 </html>
