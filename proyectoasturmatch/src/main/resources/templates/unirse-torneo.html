@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crear Torneos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/principal.css">
+<link rel="stylesheet" href="css/unirse-torneo.css">
 </head>
 <body>
 	<header>
 		<div class="usuario">
-			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}"></button>
+			<button class="icono-usuario" id="BotonUsuario"
+				th:text="${InicialUsuario}"></button>
 			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
 				<p th:text="${UsuarioActual}"></p>
 			</div>
@@ -29,10 +30,33 @@
 	</nav>
 
 	<main>
-		<section class="welcome-message">
-			<h1>LISTA DE TORNEOS</h1>
-			<p>¡Unete a torneos creados por amigos o por gente de la zona!</p>
-		</section>
+		<h1>LISTA DE TORNEOS</h1>
+		<p>¡Unete a torneos creados por amigos o por gente de la zona!</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Deporte</th>
+					<th>Fecha Inicio</th>
+					<th>Ubicación</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="torneo : ${torneos}">
+					<td th:text="${torneo.nombre}"></td>
+					<td th:text="${torneo.deporte}"></td>
+					<td th:text="${torneo.fechaInicio}"></td>
+					<td th:text="${torneo.ubicacion}"></td>
+					<td>
+						<form th:action="@{/unirse-torneo}" method="post">
+							<input type="hidden" th:name="torneoId" th:value="${torneo.id}" />
+							<button type="submit">Unirse</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</main>
 
 	<footer>
@@ -45,7 +69,7 @@
 		</div>
 		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>

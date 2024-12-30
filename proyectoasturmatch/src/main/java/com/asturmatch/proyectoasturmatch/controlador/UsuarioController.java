@@ -60,8 +60,10 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/crear-torneo")
-	public String mostrarFormularioCrearTorneo(Model modelo) {
-		modelo.addAttribute("torneo", new Usuario());
+	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+		modelo.addAttribute("torneo", new Torneo());
+		modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
 		return "crear-torneo";
 	}
 	
@@ -72,6 +74,16 @@ public class UsuarioController {
 	    modelo.addAttribute("mensaje", "Torneo creado con éxito");
 	    return "redirect:/torneos";
 	}
+	
+	@GetMapping("/unirse-torneo")
+	public String listarTorneosDisponibles(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	    modelo.addAttribute("UsuarioActual", nombreUsuario);
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos()); // Añado la lista de torneos
+	    return "unirse-torneo";
+	}
+
+	
 
 
 	// Método para obtener la primera letra
