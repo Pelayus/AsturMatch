@@ -6,10 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import com.asturmatch.proyectoasturmatch.modelo.Rol;
-import com.asturmatch.proyectoasturmatch.modelo.Usuario;
-import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
+import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
+import com.asturmatch.proyectoasturmatch.modelo.Rol;
+import com.asturmatch.proyectoasturmatch.modelo.Torneo;
+import com.asturmatch.proyectoasturmatch.modelo.Usuario;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -18,6 +21,9 @@ public class UsuarioController {
 
 	@Autowired
 	private ServicioUsuario usuarioServicio;
+	
+	@Autowired
+	private ServicioTorneo torneoServicio;
 
 	@GetMapping("/registro")
 	public String mostrarFormularioRegistro(Model modelo) {
@@ -52,6 +58,21 @@ public class UsuarioController {
 	        return "redirect:/iniciosesion";
 	    }
 	}
+	
+	@GetMapping("/crear-torneo")
+	public String mostrarFormularioCrearTorneo(Model modelo) {
+		modelo.addAttribute("torneo", new Usuario());
+		return "crear-torneo";
+	}
+	
+	@PostMapping("/crear-torneo")
+	public String crearTorneo(@ModelAttribute Torneo torneo, Model modelo) {
+	    torneo.setEstado(EstadoTorneo.PENDIENTE); // Estado por defecto
+	    torneoServicio.guardarTorneo(torneo);
+	    modelo.addAttribute("mensaje", "Torneo creado con éxito");
+	    return "redirect:/torneos";
+	}
+
 
 	// Método para obtener la primera letra
 	private String obtenerPrimeraLetra(String nombre) {

@@ -1,48 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contacto</title>
+<title>Crear Torneos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/contacto.css">
+<link rel="stylesheet" href="css/principal.css">
 </head>
 <body>
 	<header>
-	   <div class="usuario">
+		<div class="usuario">
 			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}"></button>
 			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
 				<p th:text="${UsuarioActual}"></p>
 			</div>
 		</div>
-		<h1>Contacto</h1>
+		<h1>UNIRSE A UN TORNEO</h1>
+		<p></p>
 	</header>
 
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li><a href="/torneos">Torneos</a></li>
 			<li><a href="/equipos">Equipos</a></li>
 			<li><a href="/resultados">Resultados</a></li>
+			<li><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
 
-
 	<main>
-		<h2>Estamos aquí para ayudarte</h2>
-		<p>Por favor, completa el siguiente formulario para ponerte en
-			contacto con nosotros.</p>
-		<form action="submit_contact.php" method="POST">
-			<ul>
-				<li><label for="name">Nombre:</label><br> <input
-					type="text" id="name" name="name" required></li>
-				<li><label for="email">Correo Electrónico:</label><br> <input
-					type="email" id="email" name="email" required></li>
-				<li><label for="message">Mensaje:</label><br> <textarea
-						id="message" name="message" rows="5" required></textarea></li>
-			</ul>
-			<button type="submit" class="button">Enviar</button>
-		</form>
+		<section class="welcome-message">
+			<h1>LISTA DE TORNEOS</h1>
+			<p>¡Unete a torneos creados por amigos o por gente de la zona!</p>
+		</section>
 	</main>
 
 	<footer>

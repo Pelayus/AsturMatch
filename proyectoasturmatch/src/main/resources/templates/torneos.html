@@ -10,7 +10,7 @@
 <body>
 	<header>
 		<div class="usuario">
-			<button class="icono-usuario" id="BotonUsuario">P</button>
+			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}"></button>
 			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
 				<p th:text="${UsuarioActual}"></p>
 			</div>
@@ -27,10 +27,24 @@
 		</ul>
 	</nav>
 
-
 	<main>
-		<h2>Lista de Torneos</h2>
-		<p>Aquí puedes ver y crear tus torneos personalizados.</p>
+		<h2>Aquí puedes ver y crear tus torneos personalizados.</h2>
+		<br>
+		<div class="opciones-torneos">
+			<div class="opcion-torneo">
+				<button onclick="location.href='/crear-torneo'" class="boton-opcion">
+					<img src="media/crear-liga.png" alt="Crear Torneo" /> 
+					<span>Crea un Torneo con amigos</span>
+				</button>
+			</div>
+			<div class="opcion-torneo">
+				<button onclick="location.href='/unirse-torneo'"
+					class="boton-opcion bloqueado">
+					<img src="media/unirse-liga.png" alt="Únete a un Torneo" /> 
+					<span>Únete a un Torneo Público</span>
+				</button>
+			</div>
+		</div>
 	</main>
 
 	<footer>
@@ -43,7 +57,7 @@
 		</div>
 		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>
