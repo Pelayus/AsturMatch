@@ -3,6 +3,7 @@ header {
 	background-size: cover;
 	background-position: center;
 	color: black;
+	padding-bottom:10px;
 }
 
 nav {
@@ -31,6 +32,7 @@ nav {
 
 .tarjeta {
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: space-between;
     width: 30%;
@@ -54,20 +56,28 @@ nav {
 	background: #6699ff;
 	border-radius: 0 0 15px 15px;
 	padding: 10px;
+	width: 100%;
 	text-align: center;
+	position: relative;
+	box-sizing: border-box;
 }
 
 .pie a {
-	text-decoration: none;
-	color: white;
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    padding: 8px 16px;
+    background-color: #3366cc;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    width: auto;
 }
 
 .pie a:after {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: 1;
-	content: ""
+    content: none;
+}
+
+
+.pie a:hover {
+	background-color: #003399;
 }
