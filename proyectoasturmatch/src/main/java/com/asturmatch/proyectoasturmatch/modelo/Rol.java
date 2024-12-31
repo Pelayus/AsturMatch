@@ -1,5 +1,5 @@
 package com.asturmatch.proyectoasturmatch.modelo;
 
 public enum Rol {
-	ADMIN, ORGANIZADOR, JUGADOR
+	ADMIN, ORGANIZADOR, JUGADOR, USUARIO
 }

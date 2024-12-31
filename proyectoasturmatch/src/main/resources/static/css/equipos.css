@@ -5,3 +5,69 @@ header {
 	color: black;
 }
 
+nav {
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 13px;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.cuerpo img {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 13px;
+    display: block;
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30%;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+    border-radius: 15px;
+    font-family: sans-serif;
+}
+
+.titulo {
+	font-size: 24px;
+	padding: 10px 10px 0 10px;;
+}
+
+.cuerpo {
+	padding: 10px;
+	flex: 1 1 100%;
+}
+
+.pie {
+	background: #6699ff;
+	border-radius: 0 0 15px 15px;
+	padding: 10px;
+	text-align: center;
+}
+
+.pie a {
+	text-decoration: none;
+	color: white;
+}
+
+.pie a:after {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	content: ""
+}

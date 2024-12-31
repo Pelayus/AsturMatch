@@ -37,6 +37,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     public Usuario obtenerUsuarioPorEmail(String email) {
         return repositorioUsuario.findByEmail(email); 
     }
+    
+    @Transactional
+    public Usuario obtenerUsuarioPorNombre(String nombre) {
+        return repositorioUsuario.findByNombre(nombre);
+    }
 
     @Override
     @Transactional

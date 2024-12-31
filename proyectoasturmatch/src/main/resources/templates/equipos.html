@@ -9,8 +9,9 @@
 </head>
 <body>
 	<header>
-	     <div class="usuario">
-			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}"></button>
+		<div class="usuario">
+			<button class="icono-usuario" id="BotonUsuario"
+				th:text="${InicialUsuario}"></button>
 			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
 				<p th:text="${UsuarioActual}"></p>
 			</div>
@@ -31,8 +32,85 @@
 	<main>
 		<h2>Lista de Equipos</h2>
 		<p>Aquí puedes ver y crear tus equipos</p>
-		<li><a th:href="@{/equipos-crear}">Crear equipo</a></li>
+		<div class="contenedor">
+
+			<div class="tarjeta">
+
+				<h2 class="titulo">Crear Equipo</h2>
+
+				<div class="cuerpo">
+
+					<img src="media/crear-equipo.png" alt="Crear equipo (imagen)">
+
+					<p>Crea un equipo con tus amigos y participa en eventos
+						divertidos y competitivos.</p>
+					<p>Personaliza el nombre, logo y estilo de tu equipo para
+						hacerlo único.</p>
+					<p>Invita a tus amigos y compitan juntos en diferentes torneos
+						locales o en línea.</p>
+
+				</div>
+
+				<div class="pie">
+					<li><a th:href="@{/crear-equipo}">Crear</a></li>
+				</div>
+
+			</div>
+
+			<div class="tarjeta">
+
+				<h2 class="titulo">Crear Equipo Profesional</h2>
+
+				<div class="cuerpo">
+
+					<img src="media/crear-equipopro.png"
+						alt="Crear equipo profesional (imagen)">
+
+					<p>Forma un equipo con jugadores de tu nivel y compite al
+						máximo.</p>
+					<p>Demuestra tus habilidades y compite por premios en metálico
+						que recompensarán a los mejores.</p>
+					<p>¡Haz historia con tu equipo y destaca en los torneos más
+						competitivos!</p>
+
+				</div>
+
+				<div class="pie">
+
+					<li><a th:href="@{/crear-equipopro}">Crear</a></li>
+
+				</div>
+			</div>
+
+			<div class="tarjeta">
+
+				<h2 class="titulo">Unirse a un equipo</h2>
+
+				<div class="cuerpo">
+
+					<img src="media/unirse-equipo.png"
+						alt="Unirse a un equipo (imagen)">
+
+					<p>Únete al equipo de tus amigos o conoce a nuevos jugadores
+						con tus mismas aficiones.</p>
+					<p>Accede a equipos locales o en línea y forma parte de una
+						comunidad activa.</p>
+					<p>Colabora con tu equipo en torneos y actividades para lograr
+						los mejores resultados.</p>
+
+				</div>
+
+				<div class="pie">
+
+					<li><a th:href="@{/unirse-equipo}">Unirse</a></li>
+
+				</div>
+
+			</div>
+
+		</div>
 	</main>
+
 
 	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>
@@ -44,7 +122,7 @@
 		</div>
 		<p>&copy; 2024 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>
