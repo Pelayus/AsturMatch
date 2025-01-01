@@ -1,6 +1,7 @@
 package com.asturmatch.proyectoasturmatch.serviciosImpl;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
+import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.EquipoRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +29,13 @@ public class ServicioEquipoImpl implements ServicioEquipo {
     public Optional<Equipo> obtenerEquipoPorId(Long id) {
         return repositorioEquipo.findById(id);
     }
+    
+    @Override
+    @Transactional
+    public List<Equipo> obtenerEquipoPorUsuario(Usuario usuario) {
+        return repositorioEquipo.findByJugadores(usuario);
+    }
+
 
     @Override
     @Transactional

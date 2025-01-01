@@ -1,8 +1,11 @@
 package com.asturmatch.proyectoasturmatch.modelo;
 
+import java.time.LocalDate;
 import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,65 +14,113 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Equipo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "nombre", length = 100, nullable = false)
-    private String nombre;
+	@Column(name = "nombre", length = 100, nullable = false)
+	private String nombre;
+	
+	@Column(name = "fecha_creacion", nullable = false)
+    private LocalDate fechaCreacion;
 
-    @ManyToMany
-    private List<Usuario> jugadores;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo_equipo", nullable = false, length = 20)
+	private TipoEquipo tipoEquipo;
 
-    @ManyToOne
-    private Torneo torneo;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "deporte", nullable = false, length = 20)
+	private TipoDeporte deporte;
 
-    public Equipo() {
-        super();
-    }
+	@ManyToMany
+	private List<Usuario> jugadores;
 
-    public Equipo(Long id, String nombre, List<Usuario> jugadores, Torneo torneo) {
-        super();
-        this.id = id;
-        this.nombre = nombre;
-        this.jugadores = jugadores;
-        this.torneo = torneo;
-    }
+	@ManyToOne
+	private Torneo torneo;
 
-    public Long getId() {
-        return id;
-    }
+	public Equipo() {
+		super();
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Equipo(Long id, String nombre, List<Usuario> jugadores, Torneo torneo) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.jugadores = jugadores;
+		this.torneo = torneo;
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public Equipo(Long id, String nombre, LocalDate fechaCreacion, TipoEquipo tipoEquipo, TipoDeporte deporte,
+			List<Usuario> jugadores, Torneo torneo) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.fechaCreacion = fechaCreacion;
+		this.tipoEquipo = tipoEquipo;
+		this.deporte = deporte;
+		this.jugadores = jugadores;
+		this.torneo = torneo;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public List<Usuario> getJugadores() {
-        return jugadores;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setJugadores(List<Usuario> jugadores) {
-        this.jugadores = jugadores;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public Torneo getTorneo() {
-        return torneo;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public void setTorneo(Torneo torneo) {
-        this.torneo = torneo;
-    }
+	public LocalDate getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    @Override
-    public String toString() {
-        return "Equipo [id=" + id + ", nombre=" + nombre + ", jugadores=" + jugadores + ", torneo=" + torneo + "]";
-    }
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public TipoEquipo getTipoEquipo() {
+		return tipoEquipo;
+	}
+
+	public void setTipoEquipo(TipoEquipo tipoEquipo) {
+		this.tipoEquipo = tipoEquipo;
+	}
+	
+	public TipoDeporte getDeporte() {
+		return deporte;
+	}
+
+	public void setDeporte(TipoDeporte deporte) {
+		this.deporte = deporte;
+	}
+
+	public List<Usuario> getJugadores() {
+		return jugadores;
+	}
+
+	public void setJugadores(List<Usuario> jugadores) {
+		this.jugadores = jugadores;
+	}
+
+	public Torneo getTorneo() {
+		return torneo;
+	}
+
+	public void setTorneo(Torneo torneo) {
+		this.torneo = torneo;
+	}
+
+	@Override
+	public String toString() {
+		return "Equipo [id=" + id + ", nombre=" + nombre + ", tipoEquipo=" + tipoEquipo + ", deporte=" + deporte
+				+ ", jugadores=" + jugadores + ", torneo=" + torneo + "]";
+	}
 }

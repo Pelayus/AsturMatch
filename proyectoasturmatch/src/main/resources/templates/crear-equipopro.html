@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crear Equipos - AsturMatch</title>
+<title>Crear Equipos Profesionales - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
 <link rel="stylesheet" href="css/crear-torneo.css">
 </head>
@@ -15,7 +15,7 @@
 			<p th:text="${UsuarioActual}"></p>
 			</div>
 		</div>
-		<h1>CREAR EQUIPO</h1>
+		<h1>CREAR EQUIPO PROFESIONAL</h1>
 	</header>
 
 	<nav>
@@ -28,10 +28,10 @@
 	</nav>
 
 	<main>
-		<p>¡Crea tu propio equipo y juntate con amigos o gente de tu zona!</p>
+		<p>¡Crea un equipo profesional y compite con amigos o gente de tu zona por premios!</p>
 		<div class="form-container">
-			<h2>CREAR EQUIPO</h2>
-			<form th:action="@{/crear-equipo}" method="post" class="form">
+			<h2>CREAR EQUIPO PROFESIONAL</h2>
+			<form th:action="@{/crear-equipopro}" method="post" class="form">
 				<div class="input-group">
 					<label for="nombre">Nombre:</label> <input type="text" id="nombre"
 						name="nombre" required placeholder="Nombre del equipo">
