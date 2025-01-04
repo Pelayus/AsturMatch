@@ -1,6 +1,9 @@
 package com.asturmatch.proyectoasturmatch.serviciosImpl;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
+import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
+import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
+import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.EquipoRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
@@ -35,6 +38,11 @@ public class ServicioEquipoImpl implements ServicioEquipo {
     public List<Equipo> obtenerEquipoPorUsuario(Usuario usuario) {
         return repositorioEquipo.findByJugadores(usuario);
     }
+    
+    @Transactional
+    public List<Equipo> obtenerEquiposPorTipo(TipoEquipo tipo) {
+        return repositorioEquipo.findByTipoEquipo(tipo);
+    }
 
 
     @Override
@@ -62,6 +70,15 @@ public class ServicioEquipoImpl implements ServicioEquipo {
         equipo.setId(id);
         validarEquipo(equipo);
         return repositorioEquipo.save(equipo);
+    }
+    
+    @Transactional
+    public void unirseATorneo(Equipo equipo, Torneo torneo) {
+        if (equipo.getTipoEquipo() == TipoEquipo.AMATEUR && torneo.getTipoTorneo() == TipoTorneo.PROFESIONAL) {
+            System.err.println("Los equipos amateur solo pueden unirse a torneos amateur.");
+        }
+        equipo.setTorneo(torneo);
+        repositorioEquipo.save(equipo);
     }
 
     private void validarEquipo(Equipo equipo) {

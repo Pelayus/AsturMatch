@@ -2,6 +2,8 @@ package com.asturmatch.proyectoasturmatch.controlador;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,6 +81,43 @@ public class EquipoController {
 
 		modelo.addAttribute("mensaje", "Equipo creado con éxito");
 		return "redirect:/equipos";
+	}
+	
+	@GetMapping("/unirse-equipo")
+	public String mostrarEquiposAmateur(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	    List<Equipo> equiposAmateur = equipoServicio.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
+	    modelo.addAttribute("equipos", equiposAmateur);
+	    modelo.addAttribute("UsuarioActual", nombreUsuario);
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    return "unirse-equipo";
+	}
+	
+	@PostMapping("/unirse-equipo")
+	public String unirseAEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario,
+	                            @ModelAttribute("equipoId") Long equipoId, Model modelo) {
+	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+	    
+	    Optional<Equipo> equipoOptional = equipoServicio.obtenerEquipoPorId(equipoId);
+
+	    // Verificar si el equipo existe
+	    if (equipoOptional.isEmpty()) {
+	        modelo.addAttribute("error", "El equipo no existe.");
+	        return "redirect:/unirse-equipo";
+	    }
+
+	    Equipo equipo = equipoOptional.get();
+
+	    // Verificar si el usuario ya está en el equipo
+	    if (equipo.getJugadores().contains(usuarioActual)) {
+	        modelo.addAttribute("error", "Ya eres parte de este equipo.");
+	        return "redirect:/unirse-equipo";
+	    }
+
+	    equipo.getJugadores().add(usuarioActual);
+	    equipoServicio.guardarEquipo(equipo);
+
+	    modelo.addAttribute("mensaje", "Te has unido al equipo con éxito.");
+	    return "redirect:/equipos";
 	}
 
 

@@ -17,6 +17,7 @@ public class ServicioTorneoImpl implements ServicioTorneo {
     @Autowired
     private TorneoRepository repositorioTorneo;
 
+
     @Override
     @Transactional(readOnly = true)
     public List<Torneo> obtenerTodosTorneos() {
@@ -55,6 +56,7 @@ public class ServicioTorneoImpl implements ServicioTorneo {
         validarTorneo(torneo);
         return repositorioTorneo.save(torneo);
     }
+
 
     private void validarTorneo(Torneo torneo) {
         if (torneo.getNombre() == null || torneo.getNombre().isEmpty()) {

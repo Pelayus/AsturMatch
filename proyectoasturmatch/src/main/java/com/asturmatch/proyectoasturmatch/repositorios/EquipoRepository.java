@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
+import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 
 public interface EquipoRepository extends JpaRepository<Equipo, Long>{
@@ -15,5 +16,7 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long>{
 	Optional<Equipo> findByJugadorUnico(Usuario usuario);
 
 	List<Equipo> findByJugadores(Usuario usuario);
+	
+	List<Equipo> findByTipoEquipo(TipoEquipo tipo);
 
 }

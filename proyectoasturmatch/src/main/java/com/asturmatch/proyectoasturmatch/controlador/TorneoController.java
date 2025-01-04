@@ -66,29 +66,34 @@ public class TorneoController {
 	@PostMapping("/unirse-torneo")
 	public String unirseATorneo(@ModelAttribute("nombreUsuario") String nombreUsuario,
 	                            @ModelAttribute("torneoId") Long torneoId, Model modelo) {
+	    modelo.addAttribute("UsuarioActual", nombreUsuario);
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+
 	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
 
 	    List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
 	    if (equipoDelUsuario == null || equipoDelUsuario.isEmpty()) {
 	        modelo.addAttribute("error", "No tienes un equipo asociado. Crea un equipo antes de unirte a un torneo.");
-	        return "redirect:/unirse-torneo";
+	        modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	        return "unirse-torneo";
 	    }
 
-	    // Obtengo el torneo por ID
 	    Optional<Torneo> torneo = torneoServicio.obtenerTorneoPorId(torneoId);
-	    Torneo torneoEncontrado = torneo.orElseThrow(() -> new RuntimeException("El torneo no existe"));
-
-	    // Asigno el torneo a cada equipo del usuario
-	    for (Equipo equipo : equipoDelUsuario) {
-	        equipo.setTorneo(torneoEncontrado);
+	    if (torneo.isEmpty()) {
+	        modelo.addAttribute("error", "El torneo no existe.");
+	        modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	        return "unirse-torneo";
 	    }
 
-	    for (Equipo equipo : equipoDelUsuario) {
-	        equipoServicio.guardarEquipo(equipo);
+	    try {
+	        equipoServicio.unirseATorneo(equipoDelUsuario.get(0), torneo.get());
+	        modelo.addAttribute("mensaje", "Te has unido al torneo con éxito.");
+	    } catch (IllegalArgumentException e) {
+	        modelo.addAttribute("error", e.getMessage());
 	    }
 
-	    modelo.addAttribute("mensaje", "Te has unido al torneo con éxito.");
-	    return "redirect:/torneos";
+	    modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	    return "unirse-torneo";
 	}
 
 

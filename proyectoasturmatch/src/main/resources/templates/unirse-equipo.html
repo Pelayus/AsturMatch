@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AsturMatch</title>
+<title>Unirse equipos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/principal.css">
+<link rel="stylesheet" href="css/unirse-equipo.css">
 </head>
 <body>
 	<header>
@@ -16,25 +16,43 @@
 				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
 			</div>
 		</div>
-		<h1>ASTURMATCH</h1>
-		<p>ASTURIAS, ESPAÑA</p>
+		<h1>UNIRSE EQUIPO</h1>
 	</header>
 
 	<nav>
 		<ul class="nav-menu">
+			<li><a href="/principal">Inicio</a></li>
 			<li><a href="/torneos">Torneos</a></li>
-			<li><a href="/equipos">Equipos</a></li>
 			<li><a href="/resultados">Resultados</a></li>
 			<li><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
 
 	<main>
-		<section class="welcome-message">
-			<h1></h1>
-			<p>¡Descubre, compite y sigue los mejores torneos de la comunidad
-				de Asturias!</p>
-		</section>
+		<h1>Lista de Equipos</h1>
+		<p>Únete a un equipo con amigos o gente de tu zona.</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha de Creación</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="equipo : ${equipos}">
+					<td th:text="${equipo.nombre}"></td>
+					<td th:text="${equipo.fechaCreacion}"></td>
+					<td>
+						<form th:action="@{/unirse-equipo}" method="post">
+							<input type="hidden" name="equipoId" th:value="${equipo.id}" />
+							<button type="submit">Unirse</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</main>
 
 	<footer>
@@ -47,7 +65,7 @@
 		</div>
 		<p>&copy; 2025 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>

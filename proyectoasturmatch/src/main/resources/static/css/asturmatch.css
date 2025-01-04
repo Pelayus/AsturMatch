@@ -10,7 +10,7 @@
 
     --font-familia: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --font-subtitulo: 1.8em;
-    --font-texto: 1.2em;
+    --font-texto: 0.9em;
 
     --padding-contenedor: 40px 20px;
     --margin-contenedor: 20px 0;
@@ -73,12 +73,13 @@ header h1 {
     position: absolute;
     right: 0;
     background-color: var(--color-fondo);
-    min-width: 120px;
+    min-width: 150px;
     box-shadow: var(--sombra-caja);
     padding: 10px;
     z-index: 1;
     text-align: center;
     border-radius: var(--borde-radio);
+    white-space: nowrap;
 }
 
 .datosUsuario-desplegados p {

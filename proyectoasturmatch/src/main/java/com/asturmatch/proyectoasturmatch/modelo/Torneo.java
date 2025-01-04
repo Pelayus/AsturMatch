@@ -23,6 +23,10 @@ public class Torneo {
     @Enumerated(EnumType.STRING)
     @Column(name = "deporte", nullable = false, length = 20)
     private TipoDeporte deporte;
+    
+    @Enumerated(EnumType.STRING)
+	@Column(name = "tipo_torneo", nullable = false, length = 20)
+	private TipoTorneo tipoTorneo;
 
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
@@ -44,20 +48,23 @@ public class Torneo {
         super();
     }
 
-    public Torneo(Long id, String nombre, TipoDeporte deporte, LocalDate fechaInicio, LocalDate fechaFin,
-                  String ubicacion, List<Equipo> equipos, EstadoTorneo estado) {
-        super();
-        this.id = id;
-        this.nombre = nombre;
-        this.deporte = deporte;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.ubicacion = ubicacion;
-        this.equipos = equipos;
-        this.estado = estado;
-    }
+    public Torneo(Long id, String nombre, TipoDeporte deporte, TipoTorneo tipoTorneo, LocalDate fechaInicio,
+			LocalDate fechaFin, String ubicacion, List<Equipo> equipos, EstadoTorneo estado) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.deporte = deporte;
+		this.tipoTorneo = tipoTorneo;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.ubicacion = ubicacion;
+		this.equipos = equipos;
+		this.estado = estado;
+	}
 
-    public Long getId() {
+
+
+	public Long getId() {
         return id;
     }
 
@@ -81,7 +88,15 @@ public class Torneo {
         this.deporte = deporte;
     }
 
-    public LocalDate getFechaInicio() {
+    public TipoTorneo getTipoTorneo() {
+		return tipoTorneo;
+	}
+
+	public void setTipoTorneo(TipoTorneo tipoTorneo) {
+		this.tipoTorneo = tipoTorneo;
+	}
+
+	public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 

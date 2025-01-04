@@ -13,7 +13,7 @@
 			<button class="icono-usuario" id="BotonUsuario"
 				th:text="${InicialUsuario}"></button>
 			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
-				<p th:text="${UsuarioActual}"></p>
+				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
 			</div>
 		</div>
 		<h1>UNIRSE A UN TORNEO</h1>
@@ -32,6 +32,7 @@
 	<main>
 		<h1>LISTA DE TORNEOS</h1>
 		<p>¡Unete a torneos creados por amigos o por gente de la zona!</p>
+
 		<table>
 			<thead>
 				<tr>
@@ -58,6 +59,7 @@
 			</tbody>
 		</table>
 	</main>
+
 
 	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>
