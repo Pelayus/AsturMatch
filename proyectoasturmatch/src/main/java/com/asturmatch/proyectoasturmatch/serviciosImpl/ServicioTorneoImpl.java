@@ -60,11 +60,11 @@ public class ServicioTorneoImpl implements ServicioTorneo {
 
     private void validarTorneo(Torneo torneo) {
         if (torneo.getNombre() == null || torneo.getNombre().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del torneo es obligatorio");
+           System.err.println("El nombre del torneo es obligatorio");
         }
         if (torneo.getFechaInicio() == null || torneo.getFechaFin() == null || 
             torneo.getFechaInicio().isAfter(torneo.getFechaFin())) {
-            throw new IllegalArgumentException("Las fechas del torneo son inválidas");
+        	System.err.println("Las fechas del torneo son inválidas");
         }
     }
 }

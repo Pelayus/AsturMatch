@@ -1,5 +1,6 @@
 package com.asturmatch.proyectoasturmatch.controlador;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +14,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
+import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
+import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
+import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
@@ -25,13 +30,16 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 public class TorneoController {
 
 	@Autowired
-	private ServicioUsuario usuarioServicio;
+	private ServicioUsuario S_usuario;
 
 	@Autowired
-	private ServicioTorneo torneoServicio;
+	private ServicioTorneo S_torneo;
 	
 	@Autowired
-	private ServicioEquipo equipoServicio;
+	private ServicioEquipo S_equipo;
+	
+	@Autowired
+	private ServicioMensaje S_mensaje;
 
 	@GetMapping("/crear-torneo")
 	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -43,13 +51,27 @@ public class TorneoController {
 
 	@PostMapping("/crear-torneo")
 	public String crearTorneo(@ModelAttribute Torneo torneo, @ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-		Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
 		usuarioActual.setRol(Rol.ORGANIZADOR);
-		usuarioServicio.guardarUsuario(usuarioActual);
+		S_usuario.guardarUsuario(usuarioActual);
 
 		torneo.setEstado(EstadoTorneo.PENDIENTE);
-		torneoServicio.guardarTorneo(torneo);
+		torneo.setTipoTorneo(TipoTorneo.AMATEUR);
+		S_torneo.guardarTorneo(torneo);
+		
+		Mensaje mensaje = new Mensaje();
+		mensaje.setUsuario(usuarioActual);
+		mensaje.setTorneo(torneo);
+		mensaje.setTipoMensaje(TipoMensaje.CREACION_TORNEO);
+		mensaje.setFechaCreacion(LocalDateTime.now());
+		mensaje.setContenido(usuarioActual.getNombre() + " ha creado un torneo llamado '" 
+		    + torneo.getNombre() + "' de " + torneo.getDeporte() + 
+		    " los días " + torneo.getFechaInicio() + " - " + torneo.getFechaFin() +
+		    " en " + torneo.getUbicacion() + ".");
+
+		S_mensaje.guardarMensaje(mensaje);
+
 
 		modelo.addAttribute("mensaje", "Torneo creado con éxito. Ahora eres el ORGANIZADOR.");
 		return "redirect:/torneos";
@@ -59,7 +81,7 @@ public class TorneoController {
 	public String listarTorneosDisponibles(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		modelo.addAttribute("UsuarioActual", nombreUsuario);
 		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-		modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos()); // Añado la lista de torneos
+		modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos()); // Añado la lista de torneos
 		return "unirse-torneo";
 	}
 	
@@ -69,30 +91,30 @@ public class TorneoController {
 	    modelo.addAttribute("UsuarioActual", nombreUsuario);
 	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
 
-	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
-	    List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
+	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (equipoDelUsuario == null || equipoDelUsuario.isEmpty()) {
 	        modelo.addAttribute("error", "No tienes un equipo asociado. Crea un equipo antes de unirte a un torneo.");
-	        modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	        return "unirse-torneo";
 	    }
 
-	    Optional<Torneo> torneo = torneoServicio.obtenerTorneoPorId(torneoId);
+	    Optional<Torneo> torneo = S_torneo.obtenerTorneoPorId(torneoId);
 	    if (torneo.isEmpty()) {
 	        modelo.addAttribute("error", "El torneo no existe.");
-	        modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	        return "unirse-torneo";
 	    }
 
 	    try {
-	        equipoServicio.unirseATorneo(equipoDelUsuario.get(0), torneo.get());
+	        S_equipo.unirseATorneo(equipoDelUsuario.get(0), torneo.get());
 	        modelo.addAttribute("mensaje", "Te has unido al torneo con éxito.");
 	    } catch (IllegalArgumentException e) {
 	        modelo.addAttribute("error", e.getMessage());
 	    }
 
-	    modelo.addAttribute("torneos", torneoServicio.obtenerTodosTorneos());
+	    modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	    return "unirse-torneo";
 	}
 
