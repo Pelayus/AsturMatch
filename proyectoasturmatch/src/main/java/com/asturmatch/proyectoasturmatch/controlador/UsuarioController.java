@@ -26,12 +26,18 @@ public class UsuarioController {
 
 	@PostMapping("/registro")
 	public String registrarUsuario(@ModelAttribute Usuario usuario, Model modelo) {
-		usuario.setRol(Rol.USUARIO); // Establezco por defecto el rol de USUARIO
-		usuarioServicio.guardarUsuario(usuario);
-		modelo.addAttribute("nombreUsuario", usuario.getNombre());
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuario.getNombre()));
-		return "redirect:/principal";
+	    try {
+	        usuario.setRol(Rol.USUARIO);
+	        usuarioServicio.guardarUsuario(usuario);
+	        modelo.addAttribute("nombreUsuario", usuario.getNombre());
+	        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuario.getNombre()));
+	        return "redirect:/principal";
+	    } catch (IllegalArgumentException e) {
+	        modelo.addAttribute("errorRegistro", e.getMessage());
+	        return "registro";
+	    }
 	}
+
 
 	@GetMapping("/iniciosesion")
 	public String mostrarFormularioLogin(Model modelo) {

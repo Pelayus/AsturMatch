@@ -35,6 +35,15 @@ public class EquipoController {
 		return "crear-equipo";
 	}
 
+	/**
+	 * Creo un nuevo equipo amateur si el usuario no pertenece ya a otro equipo.
+	 *
+	 * @param equipo Objeto equipo con los datos ingresados.
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return Redirección a "/equipos" si la creación es exitosa, 
+	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
+	 */
 	@PostMapping("/crear-equipo")
 	public String crearEquipo(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 	        Model modelo) {
@@ -69,6 +78,16 @@ public class EquipoController {
 		return "crear-equipopro";
 	}
 
+	
+	/**
+	 * Creo un nuevo equipo profesional si el usuario no pertenece ya a otro equipo.
+	 *
+	 * @param equipo Objeto equipo con los datos ingresados.
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return Redirección a "/equipos" si la creación es exitosa,
+	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
+	 */
 	@PostMapping("/crear-equipopro")
 	public String crearEquipoPro(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 			Model modelo) {
@@ -104,6 +123,15 @@ public class EquipoController {
 	    return "unirse-equipo";
 	}
 	
+	/**
+	 * Permite a un usuario unirse a un equipo amateur si no es miembro de él.
+	 *
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param equipoId ID del equipo al que desea unirse.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return Redirección a "/equipos" si la unión es exitosa,
+	 *         o a "unirse-equipo" con un mensaje de error si el usuario ya está en el equipo o el equipo no existe.
+	 */
 	@PostMapping("/unirse-equipo")
 	public String unirseAEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario,
 	                            @ModelAttribute("equipoId") Long equipoId, Model modelo) {

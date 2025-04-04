@@ -19,6 +19,9 @@ public class Mensaje {
 
     @ManyToOne
     private Usuario usuario;
+    
+    @ManyToOne
+    private Usuario receptor;
 
     private String contenido;
 
@@ -45,6 +48,18 @@ public class Mensaje {
 		this.torneo = torneo;
 	}
 
+	public Mensaje(Long id, Usuario usuario, Usuario receptor, String contenido, LocalDateTime fechaCreacion,
+			TipoMensaje tipoMensaje, Torneo torneo) {
+		super();
+		this.id = id;
+		this.usuario = usuario;
+		this.receptor = receptor;
+		this.contenido = contenido;
+		this.fechaCreacion = fechaCreacion;
+		this.tipoMensaje = tipoMensaje;
+		this.torneo = torneo;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -59,6 +74,14 @@ public class Mensaje {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Usuario getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(Usuario receptor) {
+		this.receptor = receptor;
 	}
 
 	public String getContenido() {
@@ -95,8 +118,8 @@ public class Mensaje {
 
 	@Override
 	public String toString() {
-		return "Mensaje [id=" + id + ", usuario=" + usuario + ", contenido=" + contenido + ", fechaCreacion="
-				+ fechaCreacion + ", tipoMensaje=" + tipoMensaje + ", torneo=" + torneo + "]";
+		return "Mensaje [id=" + id + ", usuario=" + usuario + ", receptor=" + receptor + ", contenido=" + contenido
+				+ ", fechaCreacion=" + fechaCreacion + ", tipoMensaje=" + tipoMensaje + ", torneo=" + torneo + "]";
 	}
 }
 

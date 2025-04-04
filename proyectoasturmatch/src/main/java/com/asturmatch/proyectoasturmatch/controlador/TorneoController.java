@@ -49,6 +49,14 @@ public class TorneoController {
 		return "crear-torneo";
 	}
 
+	/**
+	 * Creo un nuevo torneo amateur y asigno al usuario como organizador.
+	 *
+	 * @param torneo Objeto torneo con los datos ingresados.
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return Redirección a "/torneos" si la creación es exitosa.
+	 */
 	@PostMapping("/crear-torneo")
 	public String crearTorneo(@ModelAttribute Torneo torneo, @ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
@@ -64,7 +72,7 @@ public class TorneoController {
 		Mensaje mensaje = new Mensaje();
 		mensaje.setUsuario(usuarioActual);
 		mensaje.setTorneo(torneo);
-		mensaje.setTipoMensaje(TipoMensaje.CREACION_TORNEO);
+		mensaje.setTipoMensaje(TipoMensaje.NOTIFICACIONES_TORNEO);
 		mensaje.setFechaCreacion(LocalDateTime.now());
 		mensaje.setContenido(usuarioActual.getNombre() + " ha creado un torneo llamado '" 
 		    + torneo.getNombre() + "' de " + torneo.getDeporte() + 
@@ -87,6 +95,14 @@ public class TorneoController {
 		return "unirse-torneo";
 	}
 	
+	/**
+	 * Permite a un usuario unirse a un torneo si cumple con los requisitos.
+	 *
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param torneoId ID del torneo al que el usuario desea unirse.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return La vista "unirse-torneo" con un mensaje de éxito o error, según corresponda.
+	 */
 	@PostMapping("/unirse-torneo")
 	public String unirseATorneo(@ModelAttribute("nombreUsuario") String nombreUsuario,
 	                            @ModelAttribute("torneoId") Long torneoId, Model modelo) {
