@@ -40,19 +40,26 @@ public class EquipoController {
 	        Model modelo) {
 	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
 	    
+	    List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
+	    if (!equipoDelUsuario.isEmpty()) {
+	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
+	        return "crear-equipo";
+	    }
+
 	    usuarioActual.setRol(Rol.JUGADOR);
 	    usuarioServicio.guardarUsuario(usuarioActual);
 
 	    equipo.setJugadores(List.of(usuarioActual));
 	    equipo.setTipoEquipo(TipoEquipo.AMATEUR);
 	    equipo.setTorneo(null);
-	    equipo.setFechaCreacion(LocalDate.now()); // Asigno la fecha actual
+	    equipo.setFechaCreacion(LocalDate.now());
 
 	    equipoServicio.guardarEquipo(equipo);
 
 	    modelo.addAttribute("mensaje", "Equipo creado con éxito");
 	    return "redirect:/equipos";
 	}
+
 	
 	@GetMapping("/crear-equipopro")
 	public String mostrarFormularioCrearEquipoPro(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -65,8 +72,14 @@ public class EquipoController {
 	@PostMapping("/crear-equipopro")
 	public String crearEquipoPro(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 			Model modelo) {
-		// Obtengo el usuario actual desde el servicio
 		Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+		
+		List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
+	    if (!equipoDelUsuario.isEmpty()) {
+	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
+	        System.err.println("No puedes crear un equipo porque ya perteneces a uno.");
+	        return "crear-equipo";
+	    }
 		
 		usuarioActual.setRol(Rol.JUGADOR);
 		usuarioServicio.guardarUsuario(usuarioActual);
@@ -74,7 +87,7 @@ public class EquipoController {
 		equipo.setJugadores(List.of(usuarioActual));
 		equipo.setTipoEquipo(TipoEquipo.PROFESIONAL);
 		equipo.setTorneo(null);
-		equipo.setFechaCreacion(LocalDate.now()); // Asigno la fecha actual
+		equipo.setFechaCreacion(LocalDate.now());
 
 		equipoServicio.guardarEquipo(equipo);
 

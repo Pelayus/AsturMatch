@@ -58,6 +58,7 @@ public class TorneoController {
 
 		torneo.setEstado(EstadoTorneo.PENDIENTE);
 		torneo.setTipoTorneo(TipoTorneo.AMATEUR);
+		torneo.setCreador(usuarioActual);
 		S_torneo.guardarTorneo(torneo);
 		
 		Mensaje mensaje = new Mensaje();
@@ -74,6 +75,7 @@ public class TorneoController {
 
 
 		modelo.addAttribute("mensaje", "Torneo creado con éxito. Ahora eres el ORGANIZADOR.");
+		System.out.println("Torneo creado con éxito. Ahora eres el ORGANIZADOR.");
 		return "redirect:/torneos";
 	}
 
@@ -81,7 +83,7 @@ public class TorneoController {
 	public String listarTorneosDisponibles(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		modelo.addAttribute("UsuarioActual", nombreUsuario);
 		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-		modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos()); // Añado la lista de torneos
+		modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 		return "unirse-torneo";
 	}
 	
@@ -96,13 +98,29 @@ public class TorneoController {
 	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (equipoDelUsuario == null || equipoDelUsuario.isEmpty()) {
 	        modelo.addAttribute("error", "No tienes un equipo asociado. Crea un equipo antes de unirte a un torneo.");
+	        System.err.println("No tienes un equipo asociado. Crea un equipo antes de unirte a un torneo.");
 	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	        return "unirse-torneo";
 	    }
-
+	    
 	    Optional<Torneo> torneo = S_torneo.obtenerTorneoPorId(torneoId);
+	    
+	    if (torneo.get().getEquipos().contains(equipoDelUsuario.get(0))) {
+	        modelo.addAttribute("error", "Tu equipo ya está inscrito en este torneo.");
+	        System.err.println("Tu equipo ya está inscrito en este torneo.");
+	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
+	        return "unirse-torneo";
+	    }
 	    if (torneo.isEmpty()) {
 	        modelo.addAttribute("error", "El torneo no existe.");
+	        System.err.println("El torneo no existe.");
+	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
+	        return "unirse-torneo";
+	    }
+	    
+	    if (torneo.get().getCreador().getId().equals(usuarioActual.getId())) {
+	        modelo.addAttribute("error", "No puedes unirte a tu propio torneo.");
+	        System.err.println("No puedes unirte a tu propio torneo.");
 	        modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	        return "unirse-torneo";
 	    }
@@ -110,6 +128,7 @@ public class TorneoController {
 	    try {
 	        S_equipo.unirseATorneo(equipoDelUsuario.get(0), torneo.get());
 	        modelo.addAttribute("mensaje", "Te has unido al torneo con éxito.");
+	        System.out.println("Te has unido al torneo con éxito.");
 	    } catch (IllegalArgumentException e) {
 	        modelo.addAttribute("error", e.getMessage());
 	    }

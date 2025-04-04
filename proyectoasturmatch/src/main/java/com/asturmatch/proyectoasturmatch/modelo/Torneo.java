@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -43,6 +45,10 @@ public class Torneo {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false, length = 20)
     private EstadoTorneo estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "creador_id", nullable = false)
+    private Usuario creador;
 
     public Torneo() {
         super();
@@ -62,7 +68,20 @@ public class Torneo {
 		this.estado = estado;
 	}
 
-
+	public Torneo(Long id, String nombre, TipoDeporte deporte, TipoTorneo tipoTorneo, LocalDate fechaInicio,
+			LocalDate fechaFin, String ubicacion, List<Equipo> equipos, EstadoTorneo estado, Usuario creador) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.deporte = deporte;
+		this.tipoTorneo = tipoTorneo;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.ubicacion = ubicacion;
+		this.equipos = equipos;
+		this.estado = estado;
+		this.creador = creador;
+	}
 
 	public Long getId() {
         return id;
@@ -134,6 +153,14 @@ public class Torneo {
 
     public void setEstado(EstadoTorneo estado) {
         this.estado = estado;
+    }
+    
+    public Usuario getCreador() {
+        return creador;
+    }
+
+    public void setCreador(Usuario creador) {
+        this.creador = creador;
     }
 
     @Override
