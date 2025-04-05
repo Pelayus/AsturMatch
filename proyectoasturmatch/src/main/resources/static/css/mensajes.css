@@ -1,0 +1,129 @@
+header {
+	background-image: url('../media/header_principal.png');
+	background-size: cover;
+	background-position: center;
+	color: black;
+}
+
+/* Layout principal */
+main {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4fdf7;
+    padding: 50px 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.mensajes-wrapper {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    width: 100%;
+}
+
+/* Tarjetas */
+.card {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 128, 0, 0.12);
+    border-radius: 14px;
+    padding: 35px;
+    flex: 1 1 48%;
+    min-width: 400px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card-title {
+    color: #2e7d32;
+    font-size: 26px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #a5d6a7;
+    padding-bottom: 12px;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #388e3c;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #c8e6c9;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #f9fdf9;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #66bb6a;
+    outline: none;
+}
+
+/* Botón principal */
+.btn-enviar {
+    background-color: #66bb6a;
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn-enviar:hover {
+    background-color: #4caf50;
+    transform: scale(1.03);
+}
+
+/* Bandeja */
+.mensaje-recibido {
+    background: #e8f5e9;
+    border-left: 5px solid #81c784;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.remitente {
+    color: #2e7d32;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.contenido {
+    color: #333;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* Mensajes de sistema */
+.msg-error {
+    color: #d32f2f;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.msg-exito {
+    color: #388e3c;
+    margin-top: 20px;
+    font-weight: bold;
+}

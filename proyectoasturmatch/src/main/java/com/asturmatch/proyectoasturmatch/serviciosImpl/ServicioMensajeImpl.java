@@ -29,4 +29,8 @@ public class ServicioMensajeImpl implements ServicioMensaje {
     public void eliminarMensaje(Long mensajeId) {
     	mensaje_R.deleteById(mensajeId);
     }
+    
+    public List<Mensaje> obtenerMensajesRecibidos(Usuario receptor) {
+        return mensaje_R.findByReceptorOrderByFechaCreacionDesc(receptor);
+    }
 }

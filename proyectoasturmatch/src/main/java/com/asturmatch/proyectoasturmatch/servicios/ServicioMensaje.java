@@ -9,4 +9,5 @@ public interface ServicioMensaje {
 	void guardarMensaje(Mensaje mensaje);
     List<Mensaje> obtenerMensajesPorUsuario(Usuario usuario);
     void eliminarMensaje(Long mensajeId);
+    List<Mensaje> obtenerMensajesRecibidos(Usuario receptor);
 }

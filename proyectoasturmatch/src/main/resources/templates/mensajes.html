@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultados - AsturMatch</title>
+<link rel="stylesheet" href="css/asturmatch.css">
+<link rel="stylesheet" href="css/mensajes.css">
+</head>
+<body>
+	<header>
+		<div class="usuario">
+			<button class="icono-usuario" id="BotonUsuario" th:text="${InicialUsuario}"></button>
+			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
+				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
+			</div>
+		</div>
+		<h1>Mensajes</h1>
+	</header>
+
+	<nav>
+		<ul class="nav-menu">
+			<li><a href="/principal">Inicio</a></li>
+			<li><a href="/torneos">Torneos</a></li>
+			<li><a href="/equipos">Equipos</a></li>
+			<li><a href="/contacto">Contacto</a></li>
+		</ul>
+	</nav>
+
+
+	<main>
+    <div class="mensajes-wrapper">
+
+        <div class="card mensaje-container">
+            <h2 class="card-title">Enviar mensaje</h2>
+            
+            <form th:action="@{/enviar-mensaje}" method="post">
+                <input type="hidden" name="nombreUsuario" th:value="${UsuarioActual}"/>
+
+                <div class="form-group">
+                    <label for="receptor">Selecciona un compañero:</label>
+                    <select id="receptor" name="receptorId" required>
+                        <option th:each="compañero : ${companeros}" 
+                                th:value="${compañero.id}" 
+                                th:text="${compañero.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contenido">Mensaje:</label>
+                    <textarea id="contenido" name="contenido" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-enviar">Enviar</button>
+            </form>
+
+            <p th:if="${error}" th:text="${error}" class="msg-error"></p>
+            <p th:if="${mensaje}" th:text="${mensaje}" class="msg-exito"></p>
+        </div>
+
+        <div class="card bandeja-container">
+            <h2 class="card-title">Bandeja de entrada</h2>
+            <div class="mensaje-recibido" th:each="mensaje : ${mensajesRecibidos}">
+                <div class="remitente">
+                    <strong th:text="${mensaje.usuario.nombre}"></strong>
+                    <span th:text="${#temporals.format(mensaje.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+                <div class="contenido" th:text="${mensaje.contenido}"></div>
+            </div>
+            <p th:if="${mensajesRecibidos.size() == 0}">No tienes mensajes aún.</p>
+        </div>
+    </div>
+   </main>
+
+	<footer>
+		<p class="telefonocontacto">+34 608 65 53 49</p>
+		<br>
+		<div class="redessociales">
+			<a href="#"><img src="media/facebook.png" alt="Facebook" /></a> <a
+				href="#"><img src="media/x.png" alt="X" /></a> <a href="#"><img
+				src="media/instagram.png" alt="Instagram" /></a>
+		</div>
+		<p>&copy; 2025 AsturMatch. Todos los derechos reservados.</p>
+	</footer>
+	
+	<script src="js/asturmatch.js"></script>
+</body>
+</html>
