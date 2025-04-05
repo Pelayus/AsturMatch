@@ -6,41 +6,57 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.UsuarioRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
-
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ServicioUsuarioImpl implements ServicioUsuario {
 
     @Autowired
-    private UsuarioRepository repositorioUsuario;
+    private UsuarioRepository usuario_R;
 
     @Override
     @Transactional(readOnly = true)
     public List<Usuario> obtenerTodosUsuarios() {
-        return repositorioUsuario.findAll();
+        return usuario_R.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Usuario> obtenerUsuarioPorId(Long id) {
-        return repositorioUsuario.findById(id);
+        return usuario_R.findById(id);
     }
     
     @Override
     @Transactional
     public Usuario obtenerUsuarioPorEmail(String email) {
-        return repositorioUsuario.findByEmail(email); 
+        return usuario_R.findByEmail(email); 
     }
     
     @Transactional
     public Usuario obtenerUsuarioPorNombre(String nombre) {
-        return repositorioUsuario.findByNombre(nombre);
+        return usuario_R.findByNombre(nombre);
+    }
+    
+    @PostConstruct
+    public void crearAdminSiNoExiste() {
+        Usuario admin = usuario_R.findByNombre("admin");
+        if (admin == null) {
+            Usuario usuarioAdmin = new Usuario();
+            usuarioAdmin.setNombre("Admin");
+            usuarioAdmin.setEmail("admin@admin.com");
+            usuarioAdmin.setContraseña("admin");
+            usuarioAdmin.setRol(Rol.ADMIN);
+            usuarioAdmin = usuario_R.save(usuarioAdmin);
+
+            System.out.println("Administrador creado con éxito.");
+        } else {
+            System.out.println("El usuario administrador ya existe.");
+        }
     }
 
     @Override
@@ -50,27 +66,27 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         if (usuario.getRol() == null) {
             usuario.setRol(Rol.JUGADOR); // Asigno por defecto el rol de JUGADOR 
         }
-        return repositorioUsuario.save(usuario);
+        return usuario_R.save(usuario);
     }
 
     @Override
     @Transactional
     public void eliminarUsuario(Long id) {
-        if (!repositorioUsuario.existsById(id)) {
+        if (!usuario_R.existsById(id)) {
             throw new EntityNotFoundException("Usuario no encontrado con ID: " + id);
         }
-        repositorioUsuario.deleteById(id);
+        usuario_R.deleteById(id);
     }
 
     @Override
     @Transactional
     public Usuario actualizarUsuario(Long id, Usuario usuario) {
-        if (!repositorioUsuario.existsById(id)) {
+        if (!usuario_R.existsById(id)) {
             throw new EntityNotFoundException("Usuario no encontrado con ID: " + id);
         }
         usuario.setId(id);
         validarUsuario(usuario);
-        return repositorioUsuario.save(usuario);
+        return usuario_R.save(usuario);
     }
 
     private void validarUsuario(Usuario usuario) {
