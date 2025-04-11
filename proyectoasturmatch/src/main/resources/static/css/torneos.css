@@ -50,3 +50,57 @@ header {
     opacity: 0.8;
 }
 
+.torneos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.torneo-card {
+    background: linear-gradient(135deg, #e8f5e9, #ffffff);
+    border: 2px solid #a5d6a7;
+    border-radius: 12px;
+    padding: 20px 25px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 128, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.torneo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 128, 0, 0.25);
+}
+
+.torneo-card h3 {
+    margin-top: 0;
+    color: #2e7d32;
+    font-size: 22px;
+}
+
+.torneo-card p {
+    margin: 6px 0;
+    color: #444;
+    font-size: 15px;
+}
+
+.btn-generar {
+    margin-top: 12px;
+    background-color: #66bb6a;
+    color: #fff;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn-generar:hover {
+    background-color: #4caf50;
+    transform: scale(1.03);
+}

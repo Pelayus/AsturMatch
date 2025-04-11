@@ -174,3 +174,17 @@ footer {
 .redessociales a img:hover {
     transform: scale(1.2);
 }
+
+.msg-error {
+    color: #d32f2f;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.msg-exito {
+    color: #2e7d32;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
