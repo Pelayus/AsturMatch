@@ -17,13 +17,6 @@ public class MainController {
         return "principal";
     }
 
-    @GetMapping("/torneos")
-    public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        return "torneos";
-    }
-
     @GetMapping("/equipos")
     public String equipos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
         modelo.addAttribute("UsuarioActual", nombreUsuario);
@@ -31,7 +24,7 @@ public class MainController {
         return "equipos";
     }
 
-    @GetMapping("/resultados")
+    @GetMapping("/partidos")
     public String resultados(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
         modelo.addAttribute("UsuarioActual", nombreUsuario);
         modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));

@@ -22,7 +22,7 @@
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
 			<li><a href="/equipos">Equipos</a></li>
-			<li><a href="/resultados">Resultados</a></li>
+			<li><a href="/partidos">Partidos</a></li>
 			<li><a href="/mensajes">Mensajes</a></li>
 			<li><a href="/contacto">Contacto</a></li>
 		</ul>
@@ -46,6 +46,23 @@
 				</button>
 			</div>
 		</div>
+		
+		<div th:if="${rol == 'ORGANIZADOR'}">
+            <h2>Gestiona tus torneos</h2>
+            <div class="torneos-container">
+                <div th:each="torneo : ${misTorneos}" class="torneo-card">
+                    <h3 th:text="${torneo.nombre}"></h3>
+                    <p th:text="'Deporte: ' + ${torneo.deporte}"></p>
+                    <p th:text="'Fecha inicio: ' + ${torneo.fechaInicio}"></p>
+                    <form th:action="@{/torneos}" method="post">
+                        <input type="hidden" name="torneoId" th:value="${torneo.id}" />
+                        <button type="submit" class="btn-generar">Generar Partidos</button>
+                    </form>
+                </div>
+            </div>
+            <p th:if="${error}" th:text="${error}" class="msg-error"></p>
+            <p th:if="${mensaje}" th:text="${mensaje}" class="msg-exito"></p>
+        </div>
 	</main>
 
 	<footer>

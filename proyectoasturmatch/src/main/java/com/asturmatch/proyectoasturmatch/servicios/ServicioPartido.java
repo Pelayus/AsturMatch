@@ -15,5 +15,7 @@ public interface ServicioPartido {
 	void eliminarPartido(Long id);
 
 	Partido actualizarPartido(Long id, Partido partido);
+	
+	void generarPartidosParaTorneo(Long torneoId);
 
 }

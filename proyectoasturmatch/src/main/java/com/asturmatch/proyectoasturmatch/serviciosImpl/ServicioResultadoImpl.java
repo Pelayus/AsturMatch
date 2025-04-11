@@ -14,45 +14,45 @@ import jakarta.persistence.EntityNotFoundException;
 public class ServicioResultadoImpl implements ServicioResultado {
 
     @Autowired
-    private ResultadoRepository repositorioResultado;
+    private ResultadoRepository resultado_R;
 
     @Override
     @Transactional(readOnly = true)
     public List<Resultado> obtenerTodosResultados() {
-        return repositorioResultado.findAll();
+        return resultado_R.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Resultado> obtenerResultadoPorId(Long id) {
-        return repositorioResultado.findById(id);
+        return resultado_R.findById(id);
     }
 
     @Override
     @Transactional
     public Resultado guardarResultado(Resultado resultado) {
         validarResultado(resultado);
-        return repositorioResultado.save(resultado);
+        return resultado_R.save(resultado);
     }
 
     @Override
     @Transactional
     public void eliminarResultado(Long id) {
-        if (!repositorioResultado.existsById(id)) {
+        if (!resultado_R.existsById(id)) {
             throw new EntityNotFoundException("Resultado no encontrado con ID: " + id);
         }
-        repositorioResultado.deleteById(id);
+        resultado_R.deleteById(id);
     }
 
     @Override
     @Transactional
     public Resultado actualizarResultado(Long id, Resultado resultado) {
-        if (!repositorioResultado.existsById(id)) {
+        if (!resultado_R.existsById(id)) {
             throw new EntityNotFoundException("Resultado no encontrado con ID: " + id);
         }
         resultado.setId(id);
         validarResultado(resultado);
-        return repositorioResultado.save(resultado);
+        return resultado_R.save(resultado);
     }
 
     private void validarResultado(Resultado resultado) {

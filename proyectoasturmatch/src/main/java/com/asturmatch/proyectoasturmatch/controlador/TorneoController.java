@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
@@ -22,6 +23,7 @@ import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
@@ -36,10 +38,58 @@ public class TorneoController {
 	private ServicioTorneo S_torneo;
 	
 	@Autowired
+	private ServicioPartido S_partido;
+	
+	@Autowired
 	private ServicioEquipo S_equipo;
 	
 	@Autowired
 	private ServicioMensaje S_mensaje;
+	
+	@GetMapping("/torneos")
+    public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+
+        List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
+        modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("misTorneos", misTorneos);
+        modelo.addAttribute("rol", usuarioActual.getRol().toString());
+        return "torneos";
+    }
+	
+	/**
+     * Endpoint para que el organizador genere automáticamente los partidos de uno de sus torneos.
+     * Se valida que el torneo tenga al menos 8 equipos; si no, se devuelve un error visible para el usuario.
+     *
+     * @param nombreUsuario Nombre del usuario actual.
+     * @param torneoId ID del torneo para el que se desean generar los partidos.
+     * @param modelo Modelo de datos para la vista.
+     * @return Redirección a la vista "gestion-torneos" con mensaje de éxito o error.
+     */
+    @PostMapping("/torneos")
+    public String generarPartidos(@ModelAttribute("nombreUsuario") String nombreUsuario,
+                                  @RequestParam Long torneoId, Model modelo) {
+        Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+        Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
+        
+        // Comprobamos que el torneo exista y pertenezca al usuario actual
+        if (torneoOpt.isEmpty() || !torneoOpt.get().getCreador().getId().equals(usuarioActual.getId())) {
+            modelo.addAttribute("error", "El torneo no existe o no te pertenece.");
+            System.out.println("El torneo no existe o no te pertenece.");
+            return "redirect:/torneos";
+        }
+        
+        try {
+        	S_partido.generarPartidosParaTorneo(torneoId);
+            modelo.addAttribute("mensaje", "Partidos generados con éxito.");
+            System.out.println("Partidos generados con éxito");
+        } catch (RuntimeException ex) {
+            modelo.addAttribute("error", ex.getMessage());
+        }
+        
+        return "redirect:/torneos";
+    }
 
 	@GetMapping("/crear-torneo")
 	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -152,7 +202,6 @@ public class TorneoController {
 	    modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	    return "unirse-torneo";
 	}
-
 
 	// Método para obtener la primera letra
 	private String obtenerPrimeraLetra(String nombre) {

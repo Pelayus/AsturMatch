@@ -19,29 +19,29 @@ import java.util.Optional;
 public class ServicioEquipoImpl implements ServicioEquipo {
 
 	@Autowired
-    private EquipoRepository repositorioEquipo;
+    private EquipoRepository equipo_R;
 
     @Override
     @Transactional(readOnly = true)
     public List<Equipo> obtenerTodosEquipos() {
-        return repositorioEquipo.findAll();
+        return equipo_R.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Equipo> obtenerEquipoPorId(Long id) {
-        return repositorioEquipo.findById(id);
+        return equipo_R.findById(id);
     }
     
     @Override
     @Transactional
     public List<Equipo> obtenerEquipoPorUsuario(Usuario usuario) {
-        return repositorioEquipo.findByJugadores(usuario);
+        return equipo_R.findByJugadores(usuario);
     }
     
     @Transactional
     public List<Equipo> obtenerEquiposPorTipo(TipoEquipo tipo) {
-        return repositorioEquipo.findByTipoEquipo(tipo);
+        return equipo_R.findByTipoEquipo(tipo);
     }
 
 
@@ -49,27 +49,27 @@ public class ServicioEquipoImpl implements ServicioEquipo {
     @Transactional
     public Equipo guardarEquipo(Equipo equipo) {
         validarEquipo(equipo);
-        return repositorioEquipo.save(equipo);
+        return equipo_R.save(equipo);
     }
 
     @Override
     @Transactional
     public void eliminarEquipo(Long id) {
-        if (!repositorioEquipo.existsById(id)) {
+        if (!equipo_R.existsById(id)) {
             throw new EntityNotFoundException("Equipo no encontrado con ID: " + id);
         }
-        repositorioEquipo.deleteById(id);
+        equipo_R.deleteById(id);
     }
 
     @Override
     @Transactional
     public Equipo actualizarEquipo(Long id, Equipo equipo) {
-        if (!repositorioEquipo.existsById(id)) {
+        if (!equipo_R.existsById(id)) {
             throw new EntityNotFoundException("Equipo no encontrado con ID: " + id);
         }
         equipo.setId(id);
         validarEquipo(equipo);
-        return repositorioEquipo.save(equipo);
+        return equipo_R.save(equipo);
     }
     
     @Transactional
@@ -78,7 +78,7 @@ public class ServicioEquipoImpl implements ServicioEquipo {
             System.err.println("Los equipos amateur solo pueden unirse a torneos amateur.");
         }
         equipo.setTorneo(torneo);
-        repositorioEquipo.save(equipo);
+        equipo_R.save(equipo);
     }
 
     private void validarEquipo(Equipo equipo) {

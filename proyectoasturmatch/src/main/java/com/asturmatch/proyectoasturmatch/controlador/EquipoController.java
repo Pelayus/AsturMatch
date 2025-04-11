@@ -22,10 +22,10 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 public class EquipoController {
 
 	@Autowired
-	private ServicioUsuario usuarioServicio;
+	private ServicioUsuario S_usuario;
 
 	@Autowired
-	private ServicioEquipo equipoServicio;
+	private ServicioEquipo S_equipo;
 
 	@GetMapping("/crear-equipo")
 	public String mostrarFormularioCrearEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -47,23 +47,23 @@ public class EquipoController {
 	@PostMapping("/crear-equipo")
 	public String crearEquipo(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 	        Model modelo) {
-	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 	    
-	    List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
+	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (!equipoDelUsuario.isEmpty()) {
 	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
 	        return "crear-equipo";
 	    }
 
 	    usuarioActual.setRol(Rol.JUGADOR);
-	    usuarioServicio.guardarUsuario(usuarioActual);
+	    S_usuario.guardarUsuario(usuarioActual);
 
 	    equipo.setJugadores(List.of(usuarioActual));
 	    equipo.setTipoEquipo(TipoEquipo.AMATEUR);
 	    equipo.setTorneo(null);
 	    equipo.setFechaCreacion(LocalDate.now());
 
-	    equipoServicio.guardarEquipo(equipo);
+	    S_equipo.guardarEquipo(equipo);
 
 	    modelo.addAttribute("mensaje", "Equipo creado con éxito");
 	    return "redirect:/equipos";
@@ -91,9 +91,9 @@ public class EquipoController {
 	@PostMapping("/crear-equipopro")
 	public String crearEquipoPro(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 			Model modelo) {
-		Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 		
-		List<Equipo> equipoDelUsuario = equipoServicio.obtenerEquipoPorUsuario(usuarioActual);
+		List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (!equipoDelUsuario.isEmpty()) {
 	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
 	        System.err.println("No puedes crear un equipo porque ya perteneces a uno.");
@@ -101,14 +101,14 @@ public class EquipoController {
 	    }
 		
 		usuarioActual.setRol(Rol.JUGADOR);
-		usuarioServicio.guardarUsuario(usuarioActual);
+		S_usuario.guardarUsuario(usuarioActual);
 
 		equipo.setJugadores(List.of(usuarioActual));
 		equipo.setTipoEquipo(TipoEquipo.PROFESIONAL);
 		equipo.setTorneo(null);
 		equipo.setFechaCreacion(LocalDate.now());
 
-		equipoServicio.guardarEquipo(equipo);
+		S_equipo.guardarEquipo(equipo);
 
 		modelo.addAttribute("mensaje", "Equipo creado con éxito");
 		return "redirect:/equipos";
@@ -116,7 +116,7 @@ public class EquipoController {
 	
 	@GetMapping("/unirse-equipo")
 	public String mostrarEquiposAmateur(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-	    List<Equipo> equiposAmateur = equipoServicio.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
+	    List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
 	    modelo.addAttribute("equipos", equiposAmateur);
 	    modelo.addAttribute("UsuarioActual", nombreUsuario);
 	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
@@ -135,9 +135,9 @@ public class EquipoController {
 	@PostMapping("/unirse-equipo")
 	public String unirseAEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario,
 	                            @ModelAttribute("equipoId") Long equipoId, Model modelo) {
-	    Usuario usuarioActual = usuarioServicio.obtenerUsuarioPorNombre(nombreUsuario);
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 	    
-	    Optional<Equipo> equipoOptional = equipoServicio.obtenerEquipoPorId(equipoId);
+	    Optional<Equipo> equipoOptional = S_equipo.obtenerEquipoPorId(equipoId);
 
 	    // Verificar si el equipo existe
 	    if (equipoOptional.isEmpty()) {
@@ -154,7 +154,10 @@ public class EquipoController {
 	    }
 
 	    equipo.getJugadores().add(usuarioActual);
-	    equipoServicio.guardarEquipo(equipo);
+	    S_equipo.guardarEquipo(equipo);
+	    
+	    usuarioActual.setRol(Rol.JUGADOR);
+	    S_usuario.actualizarUsuario(usuarioActual.getId(), usuarioActual); 
 
 	    modelo.addAttribute("mensaje", "Te has unido al equipo con éxito.");
 	    return "redirect:/equipos";

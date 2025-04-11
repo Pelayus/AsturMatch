@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
+import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.TorneoRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 
@@ -15,46 +16,51 @@ import jakarta.persistence.EntityNotFoundException;
 public class ServicioTorneoImpl implements ServicioTorneo {
 
     @Autowired
-    private TorneoRepository repositorioTorneo;
+    private TorneoRepository torneo_R;
 
 
     @Override
     @Transactional(readOnly = true)
     public List<Torneo> obtenerTodosTorneos() {
-        return repositorioTorneo.findAll();
+        return torneo_R.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Torneo> obtenerTorneoPorId(Long id) {
-        return repositorioTorneo.findById(id);
+        return torneo_R.findById(id);
+    }
+    
+    @Override
+    public List<Torneo> obtenerTorneosPorCreador(Usuario creador) {
+        return torneo_R.findByCreador(creador);
     }
 
     @Override
     @Transactional
     public Torneo guardarTorneo(Torneo torneo) {
         validarTorneo(torneo);
-        return repositorioTorneo.save(torneo);
+        return torneo_R.save(torneo);
     }
 
     @Override
     @Transactional
     public void eliminarTorneo(Long id) {
-        if (!repositorioTorneo.existsById(id)) {
+        if (!torneo_R.existsById(id)) {
             throw new EntityNotFoundException("Torneo no encontrado con ID: " + id);
         }
-        repositorioTorneo.deleteById(id);
+        torneo_R.deleteById(id);
     }
 
     @Override
     @Transactional
     public Torneo actualizarTorneo(Long id, Torneo torneo) {
-        if (!repositorioTorneo.existsById(id)) {
+        if (!torneo_R.existsById(id)) {
             throw new EntityNotFoundException("Torneo no encontrado con ID: " + id);
         }
         torneo.setId(id);
         validarTorneo(torneo);
-        return repositorioTorneo.save(torneo);
+        return torneo_R.save(torneo);
     }
 
 

@@ -64,7 +64,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     public Usuario guardarUsuario(Usuario usuario) {
     	validarUsuario(usuario);
         if (usuario.getRol() == null) {
-            usuario.setRol(Rol.JUGADOR); // Asigno por defecto el rol de JUGADOR 
+            usuario.setRol(Rol.USUARIO);
         }
         return usuario_R.save(usuario);
     }

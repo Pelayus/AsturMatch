@@ -54,7 +54,22 @@ public class MensajeController {
 	    return "mensajes";
 	}
 
-
+	/**
+	 * Maneja la solicitud POST para enviar un mensaje de un usuario a otro que son del mismo equipo.
+	 * 
+	 * Este método realiza las siguientes validaciones antes de enviar el mensaje:
+	 * <ul>
+	 *     <li>Verifica que el usuario emisor pertenezca al menos a un equipo.</li>
+	 *     <li>Valida que el receptor también forme parte del mismo equipo.</li>
+	 * </ul>
+	 * Si las validaciones se cumplen, crea y guarda el mensaje con la fecha y tipo correspondiente.
+	 *
+	 * @param nombreUsuario el nombre del usuario que envía el mensaje
+	 * @param receptorId el ID del usuario receptor
+	 * @param contenido el texto del mensaje a enviar
+	 * @param modelo el objeto {@link Model} para pasar atributos al frontend
+	 * @return una redirección a la vista de mensajes, con mensajes de éxito o error según el caso
+	 */
 	@PostMapping("/enviar-mensaje")
 	public String enviarMensaje(@RequestParam String nombreUsuario,
 	                            @RequestParam Long receptorId,
