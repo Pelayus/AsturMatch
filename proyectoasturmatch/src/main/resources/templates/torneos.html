@@ -46,23 +46,40 @@
 				</button>
 			</div>
 		</div>
-		
+
 		<div th:if="${rol == 'ORGANIZADOR'}">
-            <h2>Gestiona tus torneos</h2>
-            <div class="torneos-container">
-                <div th:each="torneo : ${misTorneos}" class="torneo-card">
-                    <h3 th:text="${torneo.nombre}"></h3>
-                    <p th:text="'Deporte: ' + ${torneo.deporte}"></p>
-                    <p th:text="'Fecha inicio: ' + ${torneo.fechaInicio}"></p>
-                    <form th:action="@{/torneos}" method="post">
-                        <input type="hidden" name="torneoId" th:value="${torneo.id}" />
-                        <button type="submit" class="btn-generar">Generar Partidos</button>
-                    </form>
-                </div>
-            </div>
-            <p th:if="${error}" th:text="${error}" class="msg-error"></p>
-            <p th:if="${mensaje}" th:text="${mensaje}" class="msg-exito"></p>
-        </div>
+			<h2>Gestiona tus torneos</h2>
+			<div class="torneos-container">
+				<div th:each="torneo : ${misTorneos}" class="torneo-card">
+					<h3 th:text="${torneo.nombre}"></h3>
+					<p th:text="'Deporte: ' + ${torneo.deporte}"></p>
+
+					<form th:action="@{/torneos/editar}" method="post">
+						<input type="hidden" name="torneoId" th:value="${torneo.id}" /> <label
+							for="fechaInicio">Fecha Inicio:</label> <input type="date"
+							id="fechaInicio" name="fechaInicio"
+							th:value="${#temporals.format(torneo.fechaInicio, 'yyyy-MM-dd')}"
+							required /> <label for="fechaFin">Fecha Fin:</label> <input
+							type="date" id="fechaFin" name="fechaFin"
+							th:value="${#temporals.format(torneo.fechaFin, 'yyyy-MM-dd')}"
+							required /> <label for="ubicacion">Ubicación:</label> <input
+							type="text" id="ubicacion" name="ubicacion"
+							th:value="${torneo.ubicacion}" required />
+
+						<button type="submit" class="btn-editar">Guardar Cambios</button>
+					</form>
+
+					<form th:action="@{/torneos}" method="post">
+						<input type="hidden" name="torneoId" th:value="${torneo.id}" />
+						<button type="submit" class="btn-generar">Generar
+							Partidos</button>
+					</form>
+				</div>
+			</div>
+			<p th:if="${error}" th:text="${error}" class="msg-error"></p>
+			<p th:if="${mensaje}" th:text="${mensaje}" class="msg-exito"></p>
+		</div>
+
 	</main>
 
 	<footer>

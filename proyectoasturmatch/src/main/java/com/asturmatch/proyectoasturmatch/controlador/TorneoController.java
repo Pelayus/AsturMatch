@@ -1,10 +1,12 @@
 package com.asturmatch.proyectoasturmatch.controlador;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +100,26 @@ public class TorneoController {
 
 	    return "redirect:/torneos";
 	}
+
+	@PostMapping("/torneos/editar")
+	public String editarTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario,
+	                           @RequestParam Long torneoId,
+	                           @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+	                           @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+	                           @RequestParam String ubicacion,
+	                           RedirectAttributes redirectAttributes) {
+	    Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
+	    
+	    Torneo torneo = torneoOpt.get();
+	    torneo.setFechaInicio(fechaInicio);
+	    torneo.setFechaFin(fechaFin);
+	    torneo.setUbicacion(ubicacion);
+	    
+	    S_torneo.guardarTorneo(torneo);
+	    redirectAttributes.addFlashAttribute("mensaje", "Torneo actualizado con éxito.");
+	    return "redirect:/torneos";
+	}
+
 
 
 	@GetMapping("/crear-torneo")
