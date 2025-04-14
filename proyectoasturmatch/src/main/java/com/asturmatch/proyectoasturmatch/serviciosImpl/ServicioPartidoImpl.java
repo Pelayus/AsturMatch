@@ -1,6 +1,8 @@
 package com.asturmatch.proyectoasturmatch.serviciosImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,42 +85,81 @@ public class ServicioPartidoImpl implements ServicioPartido {
     }
     
     public void generarPartidosParaTorneo(Long torneoId) {
-        Torneo torneo = torneo_R.findById(torneoId)
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado"));
-
+        Optional<Torneo> torneoOpt = torneo_R.findById(torneoId);
+        Torneo torneo = torneoOpt.get();
         List<Equipo> equipos = torneo.getEquipos();
-
-        if (equipos.size() < 8) {
-            throw new RuntimeException("El torneo necesita al menos 8 equipos para generar partidos.");
+        
+        
+        int n = equipos.size();
+        // Número de jornadas para un round robin (para equipos pares, son n-1 jornadas)
+        int rounds = n - 1;
+        int matchesPerRound = n / 2;
+        
+        // Calcular los días disponibles en el torneo
+        LocalDate fechaInicio = torneo.getFechaInicio();
+        LocalDate fechaFin = torneo.getFechaFin();
+        long totalDias = ChronoUnit.DAYS.between(fechaInicio, fechaFin) + 1;
+        
+        if (totalDias < rounds) {
+            throw new RuntimeException("No hay suficientes días en el torneo para acomodar todas las jornadas (se requieren " 
+                    + rounds + " días, disponibles: " + totalDias + ").");
         }
-
+        
+        // Calculamos el intervalo en días entre cada jornada, de modo que la última jornada sea en fechaFin
+        long intervalo = rounds > 1 ? (totalDias - 1) / (rounds - 1) : 0;
+        
         List<Partido> partidos = new ArrayList<>();
-
-        for (int i = 0; i < equipos.size(); i++) {
-            for (int j = i + 1; j < equipos.size(); j++) {
-                Equipo local = equipos.get(i);
-                Equipo visitante = equipos.get(j);
-
+        
+        // Creamos una lista mutable para trabajar el algoritmo Round Robin (copiamos la lista de equipos)
+        List<Equipo> equiposRound = new ArrayList<>(equipos);
+        
+        // Generamos cada ronda
+        for (int round = 0; round < rounds; round++) {
+            // Determinamos la fecha para esta ronda
+            LocalDate roundDate;
+            if (round == rounds - 1) {
+                roundDate = fechaFin;
+            } else {
+                roundDate = fechaInicio.plusDays(round * intervalo);
+            }
+            LocalDateTime fechaHora = roundDate.atTime(10, 0);
+            
+            // Para la ronda actual, generamos los emparejamientos:
+            for (int i = 0; i < matchesPerRound; i++) {
+                int homeIndex = i;
+                int awayIndex = (n - 1) - i;
+                Equipo local = equiposRound.get(homeIndex);
+                Equipo visitante = equiposRound.get(awayIndex);
+                
                 Partido partido = new Partido();
                 partido.setTorneo(torneo);
                 partido.setEquipoLocal(local);
                 partido.setEquipoVisitante(visitante);
                 partido.setUbicacion(torneo.getUbicacion());
-
-                // Fecha escalonada: día de inicio + N días según índice
-                LocalDate fecha = torneo.getFechaInicio().plusDays(partidos.size());
-                partido.setFechaHora(fecha.atTime(10, 0)); // A las 10:00 am
-
+                partido.setFechaHora(fechaHora);
+                
                 Resultado resultado = new Resultado();
                 resultado.setPartido(partido);
                 resultado.setPuntuacionLocal(0);
                 resultado.setPuntuacionVisitante(0);
-
                 partido.setResultado(resultado);
-
+                
                 partidos.add(partido);
             }
+            
+            // Rotar los equipos para la próxima ronda:
+            // Mantenemos fijo el primer equipo y rotar el resto una posición hacia la derecha
+            Equipo primer = equiposRound.get(0);
+            List<Equipo> sublista = new ArrayList<>(equiposRound.subList(1, equiposRound.size()));
+            // Rotamos: el último pasa a primera posición de la sublista y el resto se desplaza
+            Equipo ultimo = sublista.remove(sublista.size() - 1);
+            sublista.add(0, ultimo);
+            // Reconstruimos la lista completa:
+            equiposRound.clear();
+            equiposRound.add(primer);
+            equiposRound.addAll(sublista);
         }
+        
         partido_R.saveAll(partidos);
     }
 }

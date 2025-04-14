@@ -30,6 +30,10 @@ body {
 }
 
 header {
+	background-image: url('../media/header_principal.png');
+	background-size: cover;
+	background-position: center;
+	color: black;
 	padding: 120px 40px;
 	box-shadow: var(--sombra-caja);
 	margin: 0;

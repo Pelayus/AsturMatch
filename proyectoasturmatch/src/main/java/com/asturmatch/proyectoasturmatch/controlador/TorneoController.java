@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
@@ -67,29 +68,37 @@ public class TorneoController {
      * @param modelo Modelo de datos para la vista.
      * @return Redirección a la vista "gestion-torneos" con mensaje de éxito o error.
      */
-    @PostMapping("/torneos")
-    public String generarPartidos(@ModelAttribute("nombreUsuario") String nombreUsuario,
-                                  @RequestParam Long torneoId, Model modelo) {
-        Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-        Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
-        
-        // Comprobamos que el torneo exista y pertenezca al usuario actual
-        if (torneoOpt.isEmpty() || !torneoOpt.get().getCreador().getId().equals(usuarioActual.getId())) {
-            modelo.addAttribute("error", "El torneo no existe o no te pertenece.");
-            System.out.println("El torneo no existe o no te pertenece.");
-            return "redirect:/torneos";
-        }
-        
-        try {
-        	S_partido.generarPartidosParaTorneo(torneoId);
-            modelo.addAttribute("mensaje", "Partidos generados con éxito.");
-            System.out.println("Partidos generados con éxito");
-        } catch (RuntimeException ex) {
-            modelo.addAttribute("error", ex.getMessage());
-        }
-        
-        return "redirect:/torneos";
-    }
+	@PostMapping("/torneos")
+	public String generarPartidos(@ModelAttribute("nombreUsuario") String nombreUsuario,
+	                              @RequestParam Long torneoId,
+	                              RedirectAttributes redirectAttributes) {
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	    Optional<Torneo> torneo = S_torneo.obtenerTorneoPorId(torneoId);
+
+	    if (torneo.isEmpty() || !torneo.get().getCreador().getId().equals(usuarioActual.getId())) {
+	        redirectAttributes.addFlashAttribute("error", "El torneo no existe o no te pertenece.");
+	        System.out.println("El torneo no existe o no te pertenece.");
+	        return "redirect:/torneos";
+	    }
+
+	    List<Equipo> equipos = torneo.get().getEquipos();
+	    if (equipos.size() < 8) {
+	        redirectAttributes.addFlashAttribute("error", "El torneo necesita al menos 8 equipos para generar partidos.");
+	        System.err.println("El torneo necesita al menos 8 equipos para generar partidos.");
+	        return "redirect:/torneos";
+	    }
+
+	    try {
+	        S_partido.generarPartidosParaTorneo(torneoId);
+	        redirectAttributes.addFlashAttribute("mensaje", "Partidos generados con éxito para el torneo ");
+	        System.out.println("Partidos generados con éxito para torneo: " + torneoId);
+	    } catch (RuntimeException ex) {
+	        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+	    }
+
+	    return "redirect:/torneos";
+	}
+
 
 	@GetMapping("/crear-torneo")
 	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
