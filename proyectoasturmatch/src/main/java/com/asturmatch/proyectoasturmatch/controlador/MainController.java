@@ -25,10 +25,10 @@ public class MainController {
     }
 
     @GetMapping("/partidos")
-    public String resultados(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+    public String partidos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
         modelo.addAttribute("UsuarioActual", nombreUsuario);
         modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        return "resultados";
+        return "partidos";
     }
 
     @GetMapping("/contacto")

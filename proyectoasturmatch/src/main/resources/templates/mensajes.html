@@ -24,7 +24,7 @@
 			<li><a href="/torneos">Torneos</a></li>
 			<li><a href="/partidos">Partidos</a></li>
 			<li><a href="/equipos">Equipos</a></li>
-			<li><a href="/contacto">Contacto</a></li>
+			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
 
