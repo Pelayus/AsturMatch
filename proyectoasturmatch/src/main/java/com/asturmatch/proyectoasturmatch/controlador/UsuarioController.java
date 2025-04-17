@@ -31,13 +31,12 @@ public class UsuarioController {
 	        usuarioServicio.guardarUsuario(usuario);
 	        modelo.addAttribute("nombreUsuario", usuario.getNombre());
 	        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuario.getNombre()));
-	        return "redirect:/principal";
+	        return "redirect:/iniciosesion";
 	    } catch (IllegalArgumentException e) {
 	        modelo.addAttribute("errorRegistro", e.getMessage());
 	        return "registro";
 	    }
 	}
-
 
 	@GetMapping("/iniciosesion")
 	public String mostrarFormularioLogin(Model modelo) {
@@ -54,7 +53,8 @@ public class UsuarioController {
 	        return "redirect:/principal";
 	    } else {
 	        modelo.addAttribute("error", "Email o contraseña incorrectos");
-	        return "redirect:/iniciosesion";
+	        System.err.println("Email o contraseña incorrectos");
+	        return "iniciosesion";
 	    }
 	}
 	

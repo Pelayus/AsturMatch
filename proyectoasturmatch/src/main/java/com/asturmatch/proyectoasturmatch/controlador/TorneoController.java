@@ -120,8 +120,6 @@ public class TorneoController {
 	    return "redirect:/torneos";
 	}
 
-
-
 	@GetMapping("/crear-torneo")
 	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		modelo.addAttribute("torneo", new Torneo());

@@ -30,8 +30,10 @@ public class EquipoController {
 	@GetMapping("/crear-equipo")
 	public String mostrarFormularioCrearEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		modelo.addAttribute("equipo", new Equipo());
-		modelo.addAttribute("UsuarioActual", nombreUsuario);
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+        modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("rol", usuarioActual.getRol().toString());
 		return "crear-equipo";
 	}
 
@@ -73,8 +75,10 @@ public class EquipoController {
 	@GetMapping("/crear-equipopro")
 	public String mostrarFormularioCrearEquipoPro(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		modelo.addAttribute("equipo", new Equipo());
-		modelo.addAttribute("UsuarioActual", nombreUsuario);
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+        modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("rol", usuarioActual.getRol().toString());
 		return "crear-equipopro";
 	}
 
@@ -118,8 +122,10 @@ public class EquipoController {
 	public String mostrarEquiposAmateur(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 	    List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
 	    modelo.addAttribute("equipos", equiposAmateur);
-	    modelo.addAttribute("UsuarioActual", nombreUsuario);
-	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+        modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("rol", usuarioActual.getRol().toString());
 	    return "unirse-equipo";
 	}
 	

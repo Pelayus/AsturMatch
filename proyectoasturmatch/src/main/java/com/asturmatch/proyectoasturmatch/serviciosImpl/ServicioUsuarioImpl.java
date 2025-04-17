@@ -59,15 +59,50 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         }
     }
 
+    /**
+     * Guardamos un nuevo usuario tras validar:
+     * <ul>
+     *   <li>Formato correcto de email.</li>
+     *   <li>Unicidad del email en la base de datos.</li>
+     *   <li>El nombre solo contiene letras (incluye acentos) y espacios.</li>
+     *   <li>La contraseña tiene al menos 8 caracteres, incluyendo al menos un dígito y un carácter especial.</li>
+     * </ul>
+     *
+     * @param usuario el objeto Usuario a guardar
+     * @return el usuario persistido
+     * @throws IllegalArgumentException si alguna validación de formato o negocio falla
+     */
     @Override
     @Transactional
     public Usuario guardarUsuario(Usuario usuario) {
-    	validarUsuario(usuario);
-        if (usuario.getRol() == null) {
-            usuario.setRol(Rol.USUARIO);
+    	
+    	//EXPRESIONES REGULARES PARA LAS VALIDACIONES
+        String regexEmail = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        String regexNombre = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$";
+        String regexPassword = "^(?=.*\\d)" + "(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?])" + ".{8,}$";
+        
+        if (usuario.getEmail() == null || !usuario.getEmail().matches(regexEmail)) {
+            throw new IllegalArgumentException("El email no tiene un formato válido");
         }
+
+        if (usuario_R.existsByEmail(usuario.getEmail())) {
+            throw new IllegalArgumentException("El email ya está en uso");
+        }
+
+        if (usuario.getNombre() == null || !usuario.getNombre().matches(regexNombre)) {
+            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios");
+        }
+
+        if (usuario.getContraseña() == null || !usuario.getContraseña().matches(regexPassword)) {
+            throw new IllegalArgumentException(
+                "La contraseña debe tener al menos 8 caracteres, incluyendo al menos un número " +
+                "y un carácter especial"
+            );
+        }
+
         return usuario_R.save(usuario);
     }
+
 
     @Override
     @Transactional

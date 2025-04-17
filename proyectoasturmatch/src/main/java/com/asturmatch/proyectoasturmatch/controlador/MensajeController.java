@@ -49,7 +49,8 @@ public class MensajeController {
 	    modelo.addAttribute("companeros", companeros);
 	    modelo.addAttribute("UsuarioActual", nombreUsuario);
 	    modelo.addAttribute("mensajesRecibidos", mensajesRecibidos);
-	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("rol", emisor.getRol().toString());
 
 	    return "mensajes";
 	}

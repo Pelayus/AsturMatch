@@ -6,4 +6,6 @@ import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	Usuario findByEmail(String email);
 	Usuario findByNombre(String nombre);
+	boolean existsByEmail(String email);
+	boolean existsByNombre(String nombre);
 }
