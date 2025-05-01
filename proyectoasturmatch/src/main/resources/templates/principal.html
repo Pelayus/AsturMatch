@@ -6,6 +6,7 @@
 <title>AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
 <link rel="stylesheet" href="css/principal.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 	<header>
@@ -22,8 +23,8 @@
 
 	<nav>
 		<ul class="nav-menu">
-			<li><a href="/torneos">Torneos</a></li>
-			<li><a href="/equipos">Equipos</a></li>
+			<li th:if="${rol == 'USUARIO' && rol == 'JUGADOR'}"><a href="/torneos">Torneos</a></li>
+			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
 			<li><a href="/partidos">Partidos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
@@ -31,10 +32,188 @@
 	</nav>
 
 	<main>
-		<section class="welcome-message">
-			<h1></h1>
-			<p>¡Descubre, compite y sigue los mejores torneos de la comunidad
-				de Asturias!</p>
+		<section class="section-container">
+			<h2 class="section-title">
+				¿Por qué <span>AsturMatch</span>?
+			</h2>
+			<div class="cards">
+				<div class="card">
+					<img src="media/gestion-torneos-inicio.png" alt="Facilidad de gestión de torneos">
+					<h3>Facilidad de gestión de torneos</h3>
+					<p>Organiza y gestiona torneos de manera sencilla e intuitiva.
+						Crea competiciones, crea partidos automáticamente, registra
+						resultados y mantén a todos los participantes informados en tiempo
+						real.</p>
+				</div>
+				<div class="card">
+					<img src="media/disfruta-amigos-inicio.png" alt="Disfruta con tus amigos">
+					<h3>Disfruta con tus amigos</h3>
+					<p>Participa en torneos amateur de diferentes deportes y
+						niveles. Compite de manera divertida mientras conoces nuevos
+						compañeros y rivales en un ambiente deportivo y social.</p>
+				</div>
+				<div class="card">
+                   <img src="media/comunicacion-instantanea-inicio.png" alt="Comunicación instantánea entre jugadores y organizadores">
+                   <h3>Comunicación instantánea</h3>
+                   <p>Mantente conectado con los miembros de tu equipo y los organizadores 
+                   mediante mensajes directos en tiempo real. Recibe alertas sobre cambios en 
+                   horarios, resultados y anuncios importantes al instante.</p>
+                </div>
+			</div>
+		</section>
+
+		<section class="features-section">
+			<div class="features-container">
+				<h5 class="features-subtitle">SOFTWARE PROPORCINDO POR
+					ASTURMATCH</h5>
+				<h2 class="features-title">Grandes Características Para Gestión
+					de Torneos</h2>
+
+				<div class="table-wrapper">
+					<table class="features-table">
+						<thead>
+							<tr>
+								<th>Características</th>
+								<th>GRATIS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Mínimo de equipos para poder comenzar un torneo<br>
+								<small>(Amateur o Profesional)</small></td>
+								<td>8<br></td>
+							</tr>
+							<tr>
+								<td><strong>Torneo Multideportivo</strong><br />
+								<small>(Fútbol, Baloncesto, Tenis...)</small></td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Torneos Personalizados<br>
+								<small>(Nombre personalizado, localización, fechas)</small></td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Jugar torneos con tus amigos</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Registrarte a cualquier torneo (Amateur o Profesional)</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Registro en equipos que quieras (Solo puedes estar en
+									uno)</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Añadir o Expulsar Equipos de los torneos (Como
+									Organizador del torneo)</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Libertad al poner las reglas de los
+									torneos(Organizador)</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Tablas de Clasificación<br>
+								<small>(Facilidad de edición tras finalizar
+										partidos/jornadas de torneos por parte del Organizador)</small></td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Mensajes entre jugadores del mismo equipo para
+									facilitar la comunicación<br>
+								<small>(Creación de chats para hablar)</small>
+								</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Deportes específicos de partidos para jugadores &
+									Equipos</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Posiciones básicas</td>
+								<td>✔️</td>
+							</tr>
+							<tr>
+								<td>Libre de anuncios</td>
+								<td>✔️</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<section class="cta-section">
+			<div class="cta-content">
+				<h2>¡Organiza o forma parte de Un Gran Torneo Junto a Nosotros!</h2>
+				<div class="cta-buttons">
+					<a href="/crear-torneo" class="btn crear-torneo">CREAR TORNEO</a> 
+					<a href="/unirse-torneo" class="btn unirse-torneo">UNIRSE A UN TORNEO</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="formats-section">
+			<div class="formats-container">
+				<h2 class="formats-title">🏁 Formatos de Torneo Disponibles</h2>
+				
+				<div class="format-box">
+					<h3>1. 🔄 Formato Liga (Predeterminado)</h3>
+					<p>
+						<strong>Formato:</strong> cada equipo juega contra todos los demás
+						al menos una vez.
+					</p>
+					<p>
+						<strong>Ventajas:</strong> el más constante gana, muy justo.
+					</p>
+					<p>
+						<strong>Desventajas:</strong> puede durar mucho, sobre todo con
+						muchos equipos.
+					</p>
+					<p>
+						<strong>Ejemplo:</strong> 6 equipos → cada uno juega 5 partidos.
+					</p>
+					<pre>
+					A vs B
+                    A vs C
+                    A vs D
+                    ...
+                    Puntos: 3 victoria, 1 empate, 0 derrota
+                    Clasificación por puntos.
+                   </pre>
+				</div>
+
+				<div class="format-box">
+					<h3>2. ⚔️ Eliminación directa (Knockout / Bracket simple)</h3>
+					<p>
+						<strong>Formato:</strong> los equipos o jugadores se enfrentan en
+						partidos directos. El perdedor queda eliminado, el ganador avanza.
+					</p>
+					<p>
+						<strong>Ventajas:</strong> rápido y emocionante.
+					</p>
+					<p>
+						<strong>Desventajas:</strong> un mal día y estás fuera, no siempre
+						gana el mejor.
+					</p>
+					<p>
+						<strong>Ejemplo:</strong> 8 equipos → Cuartos → Semis → Final.
+					</p>
+					<pre>
+					A vs B → Gana A
+                    C vs D → Gana C
+                    E vs F → Gana E
+                    G vs H → Gana G
+                    ...
+                    Final: A vs E
+                    </pre>
+				</div>
+			</div>
 		</section>
 	</main>
 
@@ -48,7 +227,7 @@
 		</div>
 		<p>&copy; 2025 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>

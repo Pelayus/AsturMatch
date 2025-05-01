@@ -7,21 +7,255 @@
 
 header p {
 	font-size: 1.8em;
-    color: blue;
-    text-align:center;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+	color: blue;
+	text-align: center;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
-.welcome-message {
-	margin-bottom: var(--margin-contenedor);
+main{
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    color: #0a1833;
+    margin: 0;
+    padding: 0;
 }
 
-.welcome-message h2 {
-	font-size: var(--font-titulo);
-	color: var(--color-texto-oscuro);
+.section-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 60px 20px;
+	text-align: center;
 }
 
-.welcome-message p {
-	font-size: var(--font-texto);
-	color: var(--color-texto-secundario);
+.section-title {
+	font-size: 32px;
+	font-weight: 700;
+	margin-bottom: 50px;
+}
+
+.section-title span {
+	color: #3dc3f8;
+}
+
+.cards {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 40px;
+}
+
+.card {
+	flex: 1 1 calc(25% - 40px);
+	max-width: 250px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.card img {
+	width: 120px;
+	height: 120px;
+	margin-bottom: 20px;
+}
+
+.card h3 {
+	font-size: 16px;
+	font-weight: 700;
+	margin-bottom: 12px;
+}
+
+.card p {
+	font-size: 15px;
+	line-height: 1.6;
+	color: #202945;
+}
+
+.features-section {
+	padding: 80px 20px;
+	background-color: #f9f9f9;
+}
+
+.features-container {
+	max-width: 1000px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.features-subtitle {
+	text-transform: uppercase;
+	color: #666;
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+.features-title {
+	font-size: 28px;
+	margin-bottom: 30px;
+	font-weight: 700;
+	color: #1e1e1e;
+}
+
+.table-wrapper {
+	overflow-x: auto;
+}
+
+.features-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #fff;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.features-table th, .features-table td {
+	padding: 20px;
+	text-align: left;
+	border-bottom: 1px solid #eee;
+	font-size: 15px;
+	color: #333;
+}
+
+.features-table th {
+	background-color: #e6e6e6;
+	font-weight: 700;
+	font-size: 18px;
+}
+
+.features-table td:nth-child(2) {
+	text-align: center;
+	font-weight: bold;
+	color: #1da358;
+}
+
+.features-table small {
+	font-size: 13px;
+	color: #777;
+	display: block;
+	margin-top: 4px;
+}
+
+.cta-section {
+	background: linear-gradient(180deg, #0790cf 0%, #4580ce 100%);
+	padding: 80px 20px;
+	color: #fdd835;
+	text-align: center;
+	position: relative;
+	clip-path: polygon(0 10%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.cta-content h2 {
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 30px;
+}
+
+.cta-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+
+.cta-buttons .btn {
+	text-decoration: none;
+	padding: 12px 24px;
+	font-weight: bold;
+	border-radius: 30px;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	transition: all 0.3s ease;
+	font-size: 14px;
+}
+
+.crear-torneo {
+	color: #ffd700;
+	border: 2px solid #ffd700;
+	background: transparent;
+}
+
+.crear-torneo:hover {
+	background: #ffd700;
+	color: #000;
+}
+
+.btn.unirse-torneo {
+	background: #ffd700;
+	color: #000;
+	box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+}
+
+.btn.unirse-torneo:hover {
+	background: #fff176;
+	color: #000;
+}
+
+.formats-section {
+	background-color: #ffffff;
+	padding: 80px 20px;
+	color: #0a1833;
+}
+
+.formats-container {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.formats-title {
+	font-size: 28px;
+	font-weight: 700;
+	text-align: center;
+	margin-bottom: 50px;
+	color: #005379;
+}
+
+.format-box {
+	background-color: #f1faff;
+	border-left: 6px solid #ffd700;
+	border-radius: 8px;
+	padding: 25px 30px;
+	margin-bottom: 40px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.format-box h3 {
+	color: #003e66;
+	margin-bottom: 15px;
+	font-size: 20px;
+}
+
+.format-box p {
+	margin: 8px 0;
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.format-box pre {
+	background: #fff;
+	color: #002c4c;
+	border: 1px solid #ddeeff;
+	border-radius: 5px;
+	padding: 15px;
+	overflow-x: auto;
+	font-size: 14px;
+	font-family: 'Courier New', monospace;
+}
+
+@media ( max-width : 900px) {
+	.cards {
+		flex-direction: column;
+		align-items: center;
+	}
+	.card {
+		max-width: 100%;
+	}
+}
+
+@media ( max-width : 768px) {
+	.features-title {
+		font-size: 24px;
+	}
+	.features-table th, .features-table td {
+		padding: 15px;
+	}
 }
