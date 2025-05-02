@@ -106,10 +106,10 @@ public class Partido {
         this.resultado = resultado;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Partido [id=" + id + ", torneo=" + torneo + ", equipoLocal=" + equipoLocal + ", equipoVisitante="
                 + equipoVisitante + ", fechaHora=" + fechaHora + ", ubicacion=" + ubicacion + ", resultado=" + resultado
                 + "]";
-    }
+    }*/
 }

@@ -163,10 +163,10 @@ public class Torneo {
         this.creador = creador;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Torneo [id=" + id + ", nombre=" + nombre + ", deporte=" + deporte + ", fechaInicio=" + fechaInicio
                 + ", fechaFin=" + fechaFin + ", ubicacion=" + ubicacion + ", equipos=" + equipos + ", estado=" + estado
                 + "]";
-    }
+    }*/
 }

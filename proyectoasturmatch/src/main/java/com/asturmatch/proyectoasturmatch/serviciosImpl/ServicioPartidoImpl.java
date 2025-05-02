@@ -37,11 +37,16 @@ public class ServicioPartidoImpl implements ServicioPartido {
     public List<Partido> obtenerTodosPartidos() {
         return partido_R.findAll();
     }
-
+    
     @Override
     @Transactional(readOnly = true)
     public Optional<Partido> obtenerPartidoPorId(Long id) {
         return partido_R.findById(id);
+    }
+    
+    @Override
+    public List<Partido> obtenerPartidosPorTorneo(Torneo torneo) {
+        return partido_R.findByTorneoOrderByFechaHoraAsc(torneo);
     }
 
     @Override

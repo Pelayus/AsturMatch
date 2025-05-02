@@ -118,9 +118,9 @@ public class Equipo {
 		this.torneo = torneo;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "Equipo [id=" + id + ", nombre=" + nombre + ", tipoEquipo=" + tipoEquipo + ", deporte=" + deporte
 				+ ", jugadores=" + jugadores + ", torneo=" + torneo + "]";
-	}
+	}*/
 }

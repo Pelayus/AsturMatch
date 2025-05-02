@@ -66,9 +66,9 @@ public class Resultado {
         this.puntuacionVisitante = puntuacionVisitante;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Resultado [id=" + id + ", partido=" + partido + ", puntuacionLocal=" + puntuacionLocal
                 + ", puntuacionVisitante=" + puntuacionVisitante + "]";
-    }
+    }*/
 }

@@ -35,15 +35,6 @@ public class MainController {
         return "equipos";
     }
 
-    @GetMapping("/partidos")
-    public String partidos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-    	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
-        return "partidos";
-    }
-
     @GetMapping("/contacto")
     public String contacto(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
     	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);

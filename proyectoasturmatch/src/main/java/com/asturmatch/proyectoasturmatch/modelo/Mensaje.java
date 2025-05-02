@@ -116,10 +116,10 @@ public class Mensaje {
 		this.torneo = torneo;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "Mensaje [id=" + id + ", usuario=" + usuario + ", receptor=" + receptor + ", contenido=" + contenido
 				+ ", fechaCreacion=" + fechaCreacion + ", tipoMensaje=" + tipoMensaje + ", torneo=" + torneo + "]";
-	}
+	}*/
 }
 

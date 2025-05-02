@@ -119,12 +119,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         if (!usuario_R.existsById(id)) {
             throw new EntityNotFoundException("Usuario no encontrado con ID: " + id);
         }
-        usuario.setId(id);
-        validarUsuario(usuario);
-        return usuario_R.save(usuario);
-    }
-
-    private void validarUsuario(Usuario usuario) {
+        
         if (usuario.getNombre() == null || usuario.getNombre().isEmpty()) {
             throw new IllegalArgumentException("El nombre del usuario es obligatorio");
         }
@@ -134,6 +129,10 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         if (usuario.getContraseña() == null || usuario.getContraseña().length() < 8) {
             throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres");
         }
+        
+        usuario.setId(id);
+        
+        return usuario_R.save(usuario);
     }
 }
 

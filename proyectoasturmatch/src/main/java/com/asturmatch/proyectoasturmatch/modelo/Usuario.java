@@ -80,8 +80,8 @@ public class Usuario {
         this.rol = rol;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Usuario [id=" + id + ", nombre=" + nombre + ", email=" + email + ", contraseña=" + contraseña + ", rol=" + rol + "]";
-    }
+    }*/
 }

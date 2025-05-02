@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Partidos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/resultados.css">
+<link rel="stylesheet" href="css/clasificacion-resultados.css">
 </head>
 <body>
 	<header>
@@ -22,7 +22,7 @@
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
 			<li><a href="/torneos">Torneos</a></li>
-			<li><a href="/equipos">Equipos</a></li>
+			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
 		</ul>
@@ -30,8 +30,168 @@
 
 
 	<main>
-		<h2>Tabla de Partidos</h2>
-		<p>Aquí puedes ver los resultados de los partidos de los torneos en los que estas involucrado</p>
+		<h1 class="clasificacion-resultados">Clasificación y Resultados</h1>
+		<div th:if="${rol == 'ORGANIZADOR'}"
+			class="clasificacion-resultados-organizador">
+			<section class="seccion-clasificacion">
+				<div class="contenedor-clasificacion">
+					<h2 class="titulo-clasificacion">Clasificación Torneo 1</h2>
+					<table class="tabla-clasificacion">
+						<thead>
+							<tr>
+								<th>Equipo</th>
+								<th>PJ</th>
+								<th>PG</th>
+								<th>PE</th>
+								<th>PP</th>
+								<th>Puntos</th>
+								<th>GF</th>
+								<th>GC</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="primer-clasificado">
+								<td><span class="pos">1</span> Equipo 1</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr class="podio">
+								<td><span class="pos">2</span> Equipo 2</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr class="podio">
+								<td><span class="pos">3</span> Equipo 3</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">4</span> Equipo 4</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">5</span> Equipo 5</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">6</span> Equipo 6</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">7</span> Equipo 7</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">8</span> Equipo 8</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td><span class="pos">9</span> Equipo 9</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+							<tr class="ultimo-clasificado">
+								<td><span class="pos">10</span> Equipo 10</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0</td>
+								<td><strong>0</strong></td>
+								<td>0</td>
+								<td>0</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="leyenda">
+						<div class="leyenda-izquierda">
+							<p>
+								<span class="punto-leyenda azul"></span> Primer clasificado
+							</p>
+							<p>
+								<span class="punto-leyenda naranja"></span> Podio
+							</p>
+							<p>
+								<span class="punto-leyenda rojo"></span> Último clasificado
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="seccion-resultados">
+				<div class="contenedor-resultados">
+					<div th:each="entry : ${partidosPorJornada}">
+						<h2 class="titulo-jornada">
+							🗓️ Jornada <span th:text="${entry.key}"></span>
+						</h2>
+						<div th:each="partido : ${entry.value}" class="partido">
+							<span class="fecha"
+								th:text="${#temporals.format(partido.fechaHora, 'dd.MM. HH:mm')}"></span>
+							<div class="equipo-local" th:text="${partido.equipoLocal.nombre}"></div>
+							<div class="marcador">
+								<input type="number" min="0" max="99"
+									th:value="${partido.resultado != null ? partido.resultado.puntuacionLocal : 0}" />
+								<span>-</span> <input type="number" min="0" max="99"
+									th:value="${partido.resultado != null ? partido.resultado.puntuacionVisitante : 0}" />
+							</div>
+							<div class="equipo-visitante"
+								th:text="${partido.equipoVisitante.nombre}"></div>
+							<button class="btn-guardar">Guardar</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</main>
 
 	<footer>

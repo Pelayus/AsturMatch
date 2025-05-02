@@ -140,8 +140,9 @@ public class TorneoController {
 	public String crearTorneo(@ModelAttribute Torneo torneo, @ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
+		Long idUsuarioActual = usuarioActual.getId();
 		usuarioActual.setRol(Rol.ORGANIZADOR);
-		S_usuario.guardarUsuario(usuarioActual);
+	    S_usuario.actualizarUsuario(idUsuarioActual,usuarioActual);
 
 		torneo.setEstado(EstadoTorneo.PENDIENTE);
 		torneo.setTipoTorneo(TipoTorneo.AMATEUR);

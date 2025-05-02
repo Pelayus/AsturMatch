@@ -21,7 +21,7 @@
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li><a href="/equipos">Equipos</a></li>
+			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
 			<li><a href="/partidos">Partidos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
@@ -32,7 +32,7 @@
 		<h2>Aquí puedes ver y crear tus torneos personalizados.</h2>
 		<br>
 		<div class="opciones-torneos">
-			<div class="opcion-torneo">
+			<div th:if="${rol != 'JUGADOR'}" class="opcion-torneo">
 				<button onclick="location.href='/crear-torneo'" class="boton-opcion">
 					<img src="media/crear-liga.png" alt="Crear Torneo" /> 
 					<span>Crea un Torneo con amigos</span>
