@@ -171,6 +171,12 @@
 	font-size: 18px;
 }
 
+.form-marcador {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
 .roja {
 	margin-left: 5px;
 	color: red;

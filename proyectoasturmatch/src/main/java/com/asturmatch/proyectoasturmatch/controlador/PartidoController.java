@@ -3,6 +3,7 @@ package com.asturmatch.proyectoasturmatch.controlador;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,10 @@ import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.asturmatch.proyectoasturmatch.modelo.Resultado;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioResultado;
 
 @Controller
 @SessionAttributes("nombreUsuario")
@@ -29,6 +34,9 @@ public class PartidoController {
 
     @Autowired
     private ServicioPartido S_partido;
+    
+    @Autowired
+    private ServicioResultado S_resultado;
 
     private static final DateTimeFormatter HORA_FORMAT = DateTimeFormatter.ofPattern("dd.MM. HH:mm");
     
@@ -56,5 +64,40 @@ public class PartidoController {
             ? nombre.substring(0,1).toUpperCase()
             : "";
     }
+    
+    @PostMapping("/guardar-resultado")
+    public String guardarResultado(@RequestParam Long partidoId,
+                                   @RequestParam int puntuacionLocal,
+                                   @RequestParam int puntuacionVisitante) {
+        try {
+            Optional<Partido> optionalPartido = S_partido.obtenerPartidoPorId(partidoId);
+
+            if (optionalPartido.isEmpty()) {
+                System.out.println("Partido no encontrado con ID: " + partidoId);
+                return "redirect:/partidos";
+            }
+
+            Partido partido = optionalPartido.get();
+            Resultado resultado = partido.getResultado();
+
+            if (resultado == null) {
+                resultado = new Resultado();
+                resultado.setPartido(partido);
+            }
+
+            resultado.setPuntuacionLocal(puntuacionLocal);
+            resultado.setPuntuacionVisitante(puntuacionVisitante);
+
+            S_resultado.guardarResultado(resultado);
+
+        } catch (Exception e) {
+            System.out.println("Error al guardar el resultado: " + e.getMessage());
+            return "redirect:/partidos";
+        }
+        
+        System.out.println("Resultado actualizado correctamente");
+        return "redirect:/partidos";
+    }
+
 
 }

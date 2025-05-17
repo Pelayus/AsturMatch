@@ -177,16 +177,26 @@
 						<div th:each="partido : ${entry.value}" class="partido">
 							<span class="fecha"
 								th:text="${#temporals.format(partido.fechaHora, 'dd.MM. HH:mm')}"></span>
+
 							<div class="equipo-local" th:text="${partido.equipoLocal.nombre}"></div>
-							<div class="marcador">
-								<input type="number" min="0" max="99"
-									th:value="${partido.resultado != null ? partido.resultado.puntuacionLocal : 0}" />
-								<span>-</span> <input type="number" min="0" max="99"
-									th:value="${partido.resultado != null ? partido.resultado.puntuacionVisitante : 0}" />
-							</div>
+
+							<form th:action="@{/guardar-resultado}" method="post"
+								class="form-marcador">
+								<input type="hidden" name="partidoId" th:value="${partido.id}" />
+
+								<div class="marcador">
+									<input type="number" min="0" max="99" name="puntuacionLocal"
+										th:value="${partido.resultado != null ? partido.resultado.puntuacionLocal : 0}" />
+									<span>-</span> <input type="number" min="0" max="99"
+										name="puntuacionVisitante"
+										th:value="${partido.resultado != null ? partido.resultado.puntuacionVisitante : 0}" />
+								</div>
+
+								<button type="submit" class="btn-guardar">Guardar</button>
+							</form>
+
 							<div class="equipo-visitante"
 								th:text="${partido.equipoVisitante.nombre}"></div>
-							<button class="btn-guardar">Guardar</button>
 						</div>
 					</div>
 				</div>
