@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Clasificacion implements Serializable{
@@ -26,6 +27,12 @@ public class Clasificacion implements Serializable{
 	private int puntos;
 	private int gf;
 	private int gc;
+	
+	@ManyToOne
+    private Equipo equipo;
+
+    @ManyToOne
+    private Torneo torneo;
 	
 	public Clasificacion() {
 		super();
@@ -96,6 +103,22 @@ public class Clasificacion implements Serializable{
 
 	public void setGc(int gc) {
 		this.gc = gc;
+	}
+
+	public Equipo getEquipo() {
+		return equipo;
+	}
+
+	public void setEquipo(Equipo equipo) {
+		this.equipo = equipo;
+	}
+
+	public Torneo getTorneo() {
+		return torneo;
+	}
+
+	public void setTorneo(Torneo torneo) {
+		this.torneo = torneo;
 	}
 
 }

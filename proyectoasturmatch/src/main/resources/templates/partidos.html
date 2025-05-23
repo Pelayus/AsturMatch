@@ -34,7 +34,8 @@
 		<div th:if="${rol == 'ORGANIZADOR'}"
 			class="clasificacion-resultados-organizador">
 			<section class="seccion-clasificacion">
-				<div class="contenedor-clasificacion">
+			  <div th:each="torneo : ${misTorneos}">
+				<div th:if="${clasificacionesPorTorneo[torneo.id]}" class="contenedor-clasificacion">
 					<h2 class="titulo-clasificacion">Clasificación Torneo 1</h2>
 					<table class="tabla-clasificacion">
 						<thead>
@@ -50,105 +51,15 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr class="primer-clasificado">
-								<td><span class="pos">1</span> Equipo 1</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr class="podio">
-								<td><span class="pos">2</span> Equipo 2</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr class="podio">
-								<td><span class="pos">3</span> Equipo 3</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">4</span> Equipo 4</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">5</span> Equipo 5</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">6</span> Equipo 6</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">7</span> Equipo 7</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">8</span> Equipo 8</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr>
-								<td><span class="pos">9</span> Equipo 9</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
-							</tr>
-							<tr class="ultimo-clasificado">
-								<td><span class="pos">10</span> Equipo 10</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td><strong>0</strong></td>
-								<td>0</td>
-								<td>0</td>
+							<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
+								<td th:text="${fila.equipo.nombre}"></td>
+								<td th:text="${fila.pj}"></td>
+								<td th:text="${fila.pg}"></td>
+								<td th:text="${fila.pe}"></td>
+								<td th:text="${fila.pp}"></td>
+								<td th:text="${fila.gf}"></td>
+								<td th:text="${fila.gc}"></td>
+								<td th:text="${fila.puntos}"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -167,6 +78,7 @@
 						</div>
 					</div>
 				</div>
+			  </div>
 			</section>
 			<section class="seccion-resultados">
 				<div class="contenedor-resultados">

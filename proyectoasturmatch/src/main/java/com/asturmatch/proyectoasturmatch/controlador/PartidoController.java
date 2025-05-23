@@ -1,6 +1,7 @@
 package com.asturmatch.proyectoasturmatch.controlador;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,9 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
 import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioClasificacion;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
@@ -37,6 +41,9 @@ public class PartidoController {
     
     @Autowired
     private ServicioResultado S_resultado;
+    
+	@Autowired
+	private ServicioClasificacion S_clasificacion;
 
     private static final DateTimeFormatter HORA_FORMAT = DateTimeFormatter.ofPattern("dd.MM. HH:mm");
     
@@ -44,6 +51,13 @@ public class PartidoController {
     public String partidos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
     	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
     	List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
+    	
+    	Map<Long, List<Clasificacion>> clasificacionesPorTorneo = new HashMap<>();
+        for (Torneo torneo : misTorneos) {
+            List<Clasificacion> clasificaciones = S_clasificacion.obtenerClasificacionPorTorneo(torneo.getId());
+            clasificacionesPorTorneo.put(torneo.getId(), clasificaciones);
+        }
+        modelo.addAttribute("clasificacionesPorTorneo", clasificacionesPorTorneo);
 
         // Mostramos los partidos por jornada
         Map<String, List<Partido>> partidosPorJornada = misTorneos.stream()
@@ -56,6 +70,7 @@ public class PartidoController {
         modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
         modelo.addAttribute("partidosPorJornada", partidosPorJornada);
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
+        modelo.addAttribute("misTorneos", misTorneos);
         return "partidos";
     }
 

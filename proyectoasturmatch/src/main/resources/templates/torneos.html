@@ -38,7 +38,7 @@
 					<span>Crea un Torneo con amigos</span>
 				</button>
 			</div>
-			<div class="opcion-torneo">
+			<div th:if="${rol != 'ORGANIZADOR'}" class="opcion-torneo">
 				<button onclick="location.href='/unirse-torneo'"
 					class="boton-opcion bloqueado">
 					<img src="media/unirse-liga.png" alt="Únete a un Torneo" /> 

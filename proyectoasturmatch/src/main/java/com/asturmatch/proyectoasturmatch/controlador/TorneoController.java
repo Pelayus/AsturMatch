@@ -2,7 +2,9 @@ package com.asturmatch.proyectoasturmatch.controlador;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
@@ -24,6 +27,7 @@ import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
 import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioClasificacion;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
@@ -48,6 +52,9 @@ public class TorneoController {
 	
 	@Autowired
 	private ServicioMensaje S_mensaje;
+	
+	@Autowired
+	private ServicioClasificacion S_clasificacion;
 	
 	@GetMapping("/torneos")
     public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -92,6 +99,11 @@ public class TorneoController {
 
 	    try {
 	        S_partido.generarPartidosParaTorneo(torneoId);
+	        
+	        if (S_clasificacion.obtenerClasificacionPorTorneo(torneoId).isEmpty()) {
+	            S_clasificacion.crearClasificacionParaTorneo(torneo.get());
+	        }
+	        
 	        redirectAttributes.addFlashAttribute("mensaje", "Partidos generados con éxito para el torneo ");
 	        System.out.println("Partidos generados con éxito para torneo: " + torneoId);
 	    } catch (RuntimeException ex) {
