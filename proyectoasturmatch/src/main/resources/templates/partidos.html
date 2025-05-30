@@ -21,7 +21,7 @@
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li><a href="/torneos">Torneos</a></li>
+			<li th:if="${rol != 'ADMIN'}"><a href="/torneos">Torneos</a></li>
 			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
@@ -31,8 +31,7 @@
 
 	<main>
 		<h1 class="clasificacion-resultados">Clasificación y Resultados</h1>
-		<div th:if="${rol == 'ORGANIZADOR'}"
-			class="clasificacion-resultados-organizador">
+		<div class="clasificacion-resultados-organizador">
 			<section class="seccion-clasificacion">
 			  <div th:each="torneo : ${misTorneos}">
 				<div th:if="${clasificacionesPorTorneo[torneo.id]}" class="contenedor-clasificacion">
@@ -45,9 +44,9 @@
 								<th>PG</th>
 								<th>PE</th>
 								<th>PP</th>
-								<th>Puntos</th>
 								<th>GF</th>
 								<th>GC</th>
+								<th>Puntos</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -103,8 +102,9 @@
 										name="puntuacionVisitante"
 										th:value="${partido.resultado != null ? partido.resultado.puntuacionVisitante : 0}" />
 								</div>
-
-								<button type="submit" class="btn-guardar">Guardar</button>
+								<th:block th:if="${rol == 'ORGANIZADOR'}">
+									<button type="submit" class="btn-guardar">Guardar</button>
+								</th:block>
 							</form>
 
 							<div class="equipo-visitante"

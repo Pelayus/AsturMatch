@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crear Torneos - AsturMatch</title>
+<title>Gestion de Equipos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/unirse-torneo.css">
+<link rel="stylesheet" href="css/gestion-equipos.css">
 </head>
 <body>
 	<header>
@@ -16,52 +16,46 @@
 				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
 			</div>
 		</div>
-		<h1>UNIRSE A UN TORNEO</h1>
-		<p></p>
+		<h1>GESTIÓN DE EQUIPOS</h1>
 	</header>
 
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li th:if="${rol != 'ADMIN'}"><a href="/torneos">Torneos</a></li>
-			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
-			<li th:if="${rol == 'ORGANIZADOR' && rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
-			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
-			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
 
 	<main>
-		<h1>LISTA DE TORNEOS</h1>
-		<p>¡Unete a torneos creados por amigos o por gente de la zona!</p>
+		<h1>Listado de Equipos</h1>
 
 		<table>
 			<thead>
 				<tr>
 					<th>Nombre</th>
+					<th>Fecha de Creación</th>
 					<th>Deporte</th>
-					<th>Fecha Inicio</th>
-					<th>Ubicación</th>
-					<th>Acción</th>
+					<th>Acciones</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="torneo : ${torneos}">
-					<td th:text="${torneo.nombre}"></td>
-					<td th:text="${torneo.deporte}"></td>
-					<td th:text="${torneo.fechaInicio}"></td>
-					<td th:text="${torneo.ubicacion}"></td>
-					<td>
-						<form th:action="@{/unirse-torneo}" method="post">
-							<input type="hidden" th:name="torneoId" th:value="${torneo.id}" />
-							<button type="submit">Unirse</button>
-						</form>
-					</td>
+				<tr th:each="equipo : ${equipos}">
+					<form th:action="@{/modificar-equipo}" method="post">
+						<input type="hidden" name="id" th:value="${equipo.id}" /> 
+						<input type="hidden" name="tipoEquipo" th:value="${equipo.tipoEquipo}" />
+						<input type="hidden" name="deporte" th:value="${equipo.deporte}" />
+
+						<td><input type="text" name="nombre" th:value="${equipo.nombre}" /></td>
+						<td><input type="date" name="fechaCreacion" th:value="${equipo.fechaCreacion}" /></td>
+						<td th:text="${equipo.tipoEquipo}"></td>
+						<td th:text="${equipo.deporte}"></td>
+
+						<td><button id="btn-modificar" type="submit">Modificar</button></td>
+					</form>
+
 				</tr>
 			</tbody>
 		</table>
 	</main>
-
 
 	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>

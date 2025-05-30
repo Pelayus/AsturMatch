@@ -12,6 +12,8 @@ public interface ServicioTorneo {
     Optional<Torneo> obtenerTorneoPorId(Long id);
     
     List<Torneo> obtenerTorneosPorCreador(Usuario creador);
+    
+    List<Torneo> obtenerTorneosPorJugador(Usuario jugador);
 
     Torneo guardarTorneo(Torneo torneo);
 

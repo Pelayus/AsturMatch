@@ -35,6 +35,12 @@ public class ServicioTorneoImpl implements ServicioTorneo {
     public List<Torneo> obtenerTorneosPorCreador(Usuario creador) {
         return torneo_R.findByCreador(creador);
     }
+    
+    @Override
+    public List<Torneo> obtenerTorneosPorJugador(Usuario jugador) {
+        return torneo_R.findByEquiposJugadoresContains(jugador);
+    }
+
 
     @Override
     @Transactional

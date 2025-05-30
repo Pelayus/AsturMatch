@@ -13,5 +13,7 @@ public interface TorneoRepository extends JpaRepository<Torneo, Long>{
 
 	@Query("SELECT t FROM Torneo t WHERE t.creador = :creador")
 	List<Torneo> findByCreador(@Param("creador") Usuario creador);
+	
+	List<Torneo> findByEquiposJugadoresContains(Usuario jugador);
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
+import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
 import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
@@ -26,6 +27,22 @@ public class EquipoController {
 
 	@Autowired
 	private ServicioEquipo S_equipo;
+	
+	/*****************************************************/
+	/*      MÉTODOS PARA USUARIOS Y ORGANIZADORES        */
+	/*****************************************************/
+	
+	@GetMapping("/equipos")
+    public String equipos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
+    	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+    	
+    	modelo.addAttribute("equipos", equiposAmateur);
+        modelo.addAttribute("UsuarioActual", nombreUsuario);
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("rol", usuarioActual.getRol().toString());
+        return "equipos";
+    }
 
 	@GetMapping("/crear-equipo")
 	public String mostrarFormularioCrearEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -122,8 +139,9 @@ public class EquipoController {
 	@GetMapping("/unirse-equipo")
 	public String mostrarEquiposAmateur(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 	    List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
-	    modelo.addAttribute("equipos", equiposAmateur);
 	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	    
+	    modelo.addAttribute("equipos", equiposAmateur);
         modelo.addAttribute("UsuarioActual", nombreUsuario);
         modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
@@ -169,7 +187,41 @@ public class EquipoController {
 	    modelo.addAttribute("mensaje", "Te has unido al equipo con éxito.");
 	    return "redirect:/equipos";
 	}
+	
+	/*****************************************************/
+	/*         MÉTODOS PARA USUARIO ADMINISTRADOR        */
+	/*****************************************************/
+	
+	@GetMapping("/gestion-equipos")
+	public String gestionEquipos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
+		modelo.addAttribute("equipos", equiposAmateur);
+		modelo.addAttribute("UsuarioActual", nombreUsuario);
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		modelo.addAttribute("rol", usuarioActual.getRol().toString());
+		return "gestion-equipos";
+	}
+	
+	@PostMapping("/modificar-equipo")
+	public String modificarEquipo(@ModelAttribute Equipo equipo) {
+	    Optional<Equipo> optionalEquipo = S_equipo.obtenerEquipoPorId(equipo.getId());
+
+	    if (optionalEquipo.isPresent()) {
+	        Equipo equipoExistente = optionalEquipo.get();
+	        equipoExistente.setNombre(equipo.getNombre());
+	        equipoExistente.setFechaCreacion(equipo.getFechaCreacion());
+
+	        S_equipo.modificarEquipo(equipoExistente);
+	    }
+
+	    return "redirect:/gestion-equipos";
+	}
+	
+	/************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
 
 	// Método para obtener la primera letra
 	private String obtenerPrimeraLetra(String nombre) {

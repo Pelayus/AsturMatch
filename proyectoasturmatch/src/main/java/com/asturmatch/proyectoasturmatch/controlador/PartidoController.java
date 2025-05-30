@@ -18,12 +18,14 @@ import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioClasificacion;
+import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.asturmatch.proyectoasturmatch.modelo.Resultado;
+import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioResultado;
 
 @Controller
@@ -50,34 +52,34 @@ public class PartidoController {
     @GetMapping("/partidos")
     public String partidos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
     	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-    	List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
+    	List<Torneo> misTorneos = null;
+    	
+		if (usuarioActual.getRol().equals(Rol.ORGANIZADOR)) {
+			misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
+		} else {
+			misTorneos = S_torneo.obtenerTorneosPorJugador(usuarioActual);
+		}
     	
     	Map<Long, List<Clasificacion>> clasificacionesPorTorneo = new HashMap<>();
         for (Torneo torneo : misTorneos) {
             List<Clasificacion> clasificaciones = S_clasificacion.obtenerClasificacionPorTorneo(torneo.getId());
             clasificacionesPorTorneo.put(torneo.getId(), clasificaciones);
         }
-        modelo.addAttribute("clasificacionesPorTorneo", clasificacionesPorTorneo);
-
+        
         // Mostramos los partidos por jornada
         Map<String, List<Partido>> partidosPorJornada = misTorneos.stream()
             .flatMap(t -> S_partido.obtenerPartidosPorTorneo(t).stream())
             .collect(Collectors.groupingBy(
                 p -> p.getFechaHora().format(HORA_FORMAT).split(" ")[0]
             ));
-
+        
+        modelo.addAttribute("clasificacionesPorTorneo", clasificacionesPorTorneo);
         modelo.addAttribute("UsuarioActual", nombreUsuario);
         modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
         modelo.addAttribute("partidosPorJornada", partidosPorJornada);
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
         modelo.addAttribute("misTorneos", misTorneos);
         return "partidos";
-    }
-
-    private String obtenerPrimeraLetra(String nombre) {
-        return (nombre!=null && !nombre.isEmpty())
-            ? nombre.substring(0,1).toUpperCase()
-            : "";
     }
     
     @PostMapping("/guardar-resultado")
@@ -99,7 +101,7 @@ public class PartidoController {
             local = partido.getEquipoLocal().getNombre();
             visitante = partido.getEquipoVisitante().getNombre();
             
-            //Obtenemos el resultado que pasa el administrador del torneo(unico con permiso de pasar el resultado)
+            //Obtenemos el resultado que pasa el administrador del torneo(único con permiso de pasar el resultado)
             Resultado resultado = partido.getResultado();
 
             if (resultado == null) {
@@ -174,5 +176,11 @@ public class PartidoController {
             System.out.println("Error al actualizar la clasificación: " + e.getMessage());
         }
         return "redirect:/partidos";
+    }
+    
+    private String obtenerPrimeraLetra(String nombre) {
+        return (nombre!=null && !nombre.isEmpty())
+            ? nombre.substring(0,1).toUpperCase()
+            : "";
     }
 }

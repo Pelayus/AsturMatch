@@ -50,6 +50,12 @@ public class ServicioEquipoImpl implements ServicioEquipo {
         validarEquipo(equipo);
         return equipo_R.save(equipo);
     }
+    
+    @Override
+    @Transactional
+    public Equipo modificarEquipo(Equipo equipo) {
+        return equipo_R.save(equipo);
+    }
 
     @Override
     @Transactional

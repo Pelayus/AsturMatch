@@ -19,6 +19,8 @@ public interface ServicioEquipo {
     List<Equipo> obtenerEquiposPorTipo(TipoEquipo tipo);
 
     Equipo guardarEquipo(Equipo equipo);
+    
+    Equipo modificarEquipo(Equipo equipo);
 
     void eliminarEquipo(Long id);
     

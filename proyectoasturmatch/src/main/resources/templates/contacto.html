@@ -21,9 +21,9 @@
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li><a href="/torneos">Torneos</a></li>
+			<li th:if="${rol != 'ADMIN'}"><a href="/torneos">Torneos</a></li>
 			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
-			<li><a href="/partidos">Partidos</a></li>
+			<li th:if="${rol == 'ORGANIZADOR' && rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 		</ul>
 	</nav>
