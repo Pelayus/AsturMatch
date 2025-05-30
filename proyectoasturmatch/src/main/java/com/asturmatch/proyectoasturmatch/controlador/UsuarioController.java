@@ -17,6 +17,10 @@ public class UsuarioController {
 
 	@Autowired
 	private ServicioUsuario usuarioServicio;
+	
+	/*****************************************************/
+	/*      INICIO DE SESIÓN Y REGISTRO DE USUARIOS      */
+	/*****************************************************/
 
 	@GetMapping("/registro")
 	public String mostrarFormularioRegistro(Model modelo) {
@@ -58,6 +62,10 @@ public class UsuarioController {
 	    }
 	}
 	
+	/************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
+
 	// Método para obtener la primera letra
 	private String obtenerPrimeraLetra(String nombre) {
 		if (nombre != null && !nombre.isEmpty()) {

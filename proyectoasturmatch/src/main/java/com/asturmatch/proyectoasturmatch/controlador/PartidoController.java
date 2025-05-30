@@ -178,9 +178,15 @@ public class PartidoController {
         return "redirect:/partidos";
     }
     
-    private String obtenerPrimeraLetra(String nombre) {
-        return (nombre!=null && !nombre.isEmpty())
-            ? nombre.substring(0,1).toUpperCase()
-            : "";
-    }
+    /************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
+
+	// Método para obtener la primera letra
+	private String obtenerPrimeraLetra(String nombre) {
+		if (nombre != null && !nombre.isEmpty()) {
+			return String.valueOf(nombre.charAt(0)).toUpperCase();
+		}
+		return "";
+	}
 }

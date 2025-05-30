@@ -16,9 +16,8 @@ public interface ServicioTorneo {
     List<Torneo> obtenerTorneosPorJugador(Usuario jugador);
 
     Torneo guardarTorneo(Torneo torneo);
+    
+    Torneo actualizarTorneo(Torneo torneo);
 
     void eliminarTorneo(Long id);
-
-    Torneo actualizarTorneo(Long id, Torneo torneo);
-
 }

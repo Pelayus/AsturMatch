@@ -16,6 +16,10 @@ public class MainController {
 	
 	@Autowired
 	private ServicioUsuario S_usuario;
+	
+	/*******************************************/
+	/*     LLAMADA A LA PANTALLA PRINCIPAL     */
+	/*******************************************/
 
     @GetMapping("/principal")
     public String mostrarPaginaPrincipal(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
@@ -26,6 +30,10 @@ public class MainController {
         return "principal";
     }
 
+    /*******************************************/
+	/*    LLAMADA A LA PANTALLA DE CONTACTO    */
+	/*******************************************/
+    
     @GetMapping("/contacto")
     public String contacto(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
     	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
@@ -34,13 +42,17 @@ public class MainController {
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
         return "contacto";
     }
+    
+    /************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
 
-    // Método para obtener la primera letra
-    private String obtenerPrimeraLetra(String nombre) {
-        if (nombre != null && !nombre.isEmpty()) {
-            return String.valueOf(nombre.charAt(0)).toUpperCase();
-        }
-        return "";
-    }
+	// Método para obtener la primera letra
+	private String obtenerPrimeraLetra(String nombre) {
+		if (nombre != null && !nombre.isEmpty()) {
+			return String.valueOf(nombre.charAt(0)).toUpperCase();
+		}
+		return "";
+	}
 }
 

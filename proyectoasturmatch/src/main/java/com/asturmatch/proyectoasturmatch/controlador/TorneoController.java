@@ -23,6 +23,7 @@ import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
+import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
 import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
@@ -244,6 +245,45 @@ public class TorneoController {
 	    modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 	    return "unirse-torneo";
 	}
+	
+	/*****************************************************/
+	/*         MÉTODOS PARA USUARIO ADMINISTRADOR        */
+	/*****************************************************/
+	
+	@GetMapping("/gestion-torneos")
+	public String gestionTorneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+		List<Torneo> torneos = S_torneo.obtenerTodosTorneos();
+		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+
+		modelo.addAttribute("torneos", torneos);
+		modelo.addAttribute("UsuarioActual", nombreUsuario);
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		modelo.addAttribute("rol", usuarioActual.getRol().toString());
+		return "gestion-torneos";
+	}
+	
+	@PostMapping("/modificar-torneo")
+	public String modificarTorneo(@ModelAttribute Torneo torneo) {
+	    Optional<Torneo> optionalTorneo = S_torneo.obtenerTorneoPorId(torneo.getId());
+
+	    if (optionalTorneo.isPresent()) {
+	        Torneo torneoExistente = optionalTorneo.get();
+	        torneoExistente.setNombre(torneo.getNombre());
+	        torneoExistente.setFechaInicio(torneo.getFechaInicio());
+	        torneoExistente.setFechaFin(torneo.getFechaFin());
+	        torneoExistente.setUbicacion(torneo.getUbicacion());
+	        torneoExistente.setEstado(torneo.getEstado());
+	        
+	        S_torneo.actualizarTorneo(torneoExistente);
+	    }
+
+	    return "redirect:/gestion-torneos";
+	}
+
+
+	/************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
 
 	// Método para obtener la primera letra
 	private String obtenerPrimeraLetra(String nombre) {

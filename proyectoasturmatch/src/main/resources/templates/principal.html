@@ -24,6 +24,7 @@
 	<nav>
 		<ul class="nav-menu">
 			<li th:if="${rol != 'ADMIN'}"><a href="/torneos">Torneos</a></li>
+			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-torneos">Gestión de Torneos</a></li>
 			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
 			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-equipos">Gestión de Equipos</a></li>
 			<li th:if="${rol == 'ORGANIZADOR' && rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>

@@ -60,11 +60,7 @@ public class ServicioTorneoImpl implements ServicioTorneo {
 
     @Override
     @Transactional
-    public Torneo actualizarTorneo(Long id, Torneo torneo) {
-        if (!torneo_R.existsById(id)) {
-            throw new EntityNotFoundException("Torneo no encontrado con ID: " + id);
-        }
-        torneo.setId(id);
+    public Torneo actualizarTorneo(Torneo torneo) {
         validarTorneo(torneo);
         return torneo_R.save(torneo);
     }

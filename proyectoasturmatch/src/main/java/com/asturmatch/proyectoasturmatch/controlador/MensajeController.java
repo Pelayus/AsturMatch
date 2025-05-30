@@ -105,11 +105,15 @@ public class MensajeController {
 	    return "redirect:/mensajes";
 	}
 	
+	/************************************/
+	/*       MÉTODOS DE AYUDA           */
+	/************************************/
+
 	// Método para obtener la primera letra
-    private String obtenerPrimeraLetra(String nombre) {
-        if (nombre != null && !nombre.isEmpty()) {
-            return String.valueOf(nombre.charAt(0)).toUpperCase();
-        }
-        return "";
-    }
+	private String obtenerPrimeraLetra(String nombre) {
+		if (nombre != null && !nombre.isEmpty()) {
+			return String.valueOf(nombre.charAt(0)).toUpperCase();
+		}
+		return "";
+	}
 }

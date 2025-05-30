@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestion de Equipos - AsturMatch</title>
+<title>Gestión de Torneos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
 <link rel="stylesheet" href="css/gestion-equipos.css">
 </head>
@@ -16,40 +16,46 @@
 				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
 			</div>
 		</div>
-		<h1>GESTIÓN DE EQUIPOS</h1>
+		<h1>GESTIÓN DE TORNEOS</h1>
 	</header>
 
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-torneos">Gestión de Torneos</a></li>
+			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-equipos">Gestión de Equipos</a></li>
 		</ul>
 	</nav>
 
 	<main>
-		<h1>Listado de Equipos</h1>
+		<h1>Listado de Torneos</h1>
 
 		<table>
 			<thead>
 				<tr>
 					<th>Nombre</th>
-					<th>Fecha de Creación</th>
-					<th>Tipo de Equipo</th>
+					<th>Fecha de Inicio</th>
+					<th>Fecha de Finalización</th>
+					<th>Ubicación</th>
+					<th>Estado</th>
+					<th>Tipo de Torneo</th>
 					<th>Deporte</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="equipo : ${equipos}">
-					<form th:action="@{/modificar-equipo}" method="post">
-						<input type="hidden" name="id" th:value="${equipo.id}" /> 
-						<input type="hidden" name="tipoEquipo" th:value="${equipo.tipoEquipo}" />
-						<input type="hidden" name="deporte" th:value="${equipo.deporte}" />
+				<tr th:each="torneo : ${torneos}">
+					<form th:action="@{/modificar-torneo}" method="post">
+						<input type="hidden" name="id" th:value="${torneo.id}" /> 
+						<input type="hidden" name="tipoTorneo" th:value="${torneo.tipoTorneo}" />
+						<input type="hidden" name="deporte" th:value="${torneo.deporte}" />
 
-						<td><input type="text" name="nombre" th:value="${equipo.nombre}" /></td>
-						<td><input type="date" name="fechaCreacion" th:value="${equipo.fechaCreacion}" /></td>
-						<td th:text="${equipo.tipoEquipo}"></td>
-						<td th:text="${equipo.deporte}"></td>
+						<td><input type="text" name="nombre" th:value="${torneo.nombre}" /></td>
+						<td><input type="date" name="fechaInicio" th:value="${torneo.fechaInicio}" /></td>
+						<td><input type="date" name="fechaFin" th:value="${torneo.fechaFin}" /></td>
+						<td><input type="text" name="ubicacion" th:value="${torneo.ubicacion}" /></td>
+						<td><input type="text" name="estado" th:value="${torneo.estado}" /></td>
+						<td th:text="${torneo.tipoTorneo}"></td>
+						<td th:text="${torneo.deporte}"></td>
 
 						<td><button id="btn-modificar" type="submit">Modificar</button></td>
 					</form>
