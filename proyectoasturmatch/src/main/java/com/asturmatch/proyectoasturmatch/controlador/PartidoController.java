@@ -12,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
 import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
+import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
@@ -84,6 +84,8 @@ public class PartidoController {
     public String guardarResultado(@RequestParam Long partidoId,
                                    @RequestParam int puntuacionLocal,
                                    @RequestParam int puntuacionVisitante) {
+    	String local;
+    	String visitante;
         try {
             Optional<Partido> optionalPartido = S_partido.obtenerPartidoPorId(partidoId);
 
@@ -92,7 +94,12 @@ public class PartidoController {
                 return "redirect:/partidos";
             }
 
+            //Obtenemos el nombre de los equipos que dispuntan el partido
             Partido partido = optionalPartido.get();
+            local = partido.getEquipoLocal().getNombre();
+            visitante = partido.getEquipoVisitante().getNombre();
+            
+            //Obtenemos el resultado que pasa el administrador del torneo(unico con permiso de pasar el resultado)
             Resultado resultado = partido.getResultado();
 
             if (resultado == null) {
@@ -100,19 +107,72 @@ public class PartidoController {
                 resultado.setPartido(partido);
             }
 
+            //Obtenemos la como va el marcador del partido y lo guardamos en BD 
             resultado.setPuntuacionLocal(puntuacionLocal);
             resultado.setPuntuacionVisitante(puntuacionVisitante);
 
             S_resultado.guardarResultado(resultado);
+            actualizarClasificacion(partidoId, puntuacionLocal, puntuacionVisitante);
 
         } catch (Exception e) {
             System.out.println("Error al guardar el resultado: " + e.getMessage());
             return "redirect:/partidos";
         }
         
+        System.out.println("Partido: " + local + " contra " + visitante);
         System.out.println("Resultado actualizado correctamente");
         return "redirect:/partidos";
     }
+    
+    @PostMapping("/actualizar-clasificacion")
+    public String actualizarClasificacion(@RequestParam Long partidoId,
+                                          @RequestParam int puntuacionLocal,
+                                          @RequestParam int puntuacionVisitante) {
+        try {
+            Optional<Partido> optionalPartido = S_partido.obtenerPartidoPorId(partidoId);
+            if (optionalPartido.isEmpty()) {
+                System.out.println("Partido no encontrado con ID: " + partidoId);
+                return "redirect:/partidos";
+            }
 
+            Partido partido = optionalPartido.get();
+            Equipo equipoLocal = partido.getEquipoLocal();
+            Equipo equipoVisitante = partido.getEquipoVisitante();
+            Torneo torneo = partido.getTorneo();
 
+            Clasificacion clasifLocal = S_clasificacion.obtenerClasificacionPorEquipoYTorneo(equipoLocal, torneo);
+            Clasificacion clasifVisitante = S_clasificacion.obtenerClasificacionPorEquipoYTorneo(equipoVisitante, torneo);
+
+            clasifLocal.setPj(clasifLocal.getPj() + 1);
+            clasifVisitante.setPj(clasifVisitante.getPj() + 1);
+
+            clasifLocal.setGf(clasifLocal.getGf() + puntuacionLocal);
+            clasifLocal.setGc(clasifLocal.getGc() + puntuacionVisitante);
+
+            clasifVisitante.setGf(clasifVisitante.getGf() + puntuacionVisitante);
+            clasifVisitante.setGc(clasifVisitante.getGc() + puntuacionLocal);
+
+            if (puntuacionLocal > puntuacionVisitante) {
+                clasifLocal.setPg(clasifLocal.getPg() + 1);
+                clasifVisitante.setPp(clasifVisitante.getPp() + 1);
+                clasifLocal.setPuntos(clasifLocal.getPuntos() + 3);
+            } else if (puntuacionLocal < puntuacionVisitante) {
+                clasifVisitante.setPg(clasifVisitante.getPg() + 1);
+                clasifLocal.setPp(clasifLocal.getPp() + 1);
+                clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 3);
+            } else {
+                clasifLocal.setPe(clasifLocal.getPe() + 1);
+                clasifVisitante.setPe(clasifVisitante.getPe() + 1);
+                clasifLocal.setPuntos(clasifLocal.getPuntos() + 1);
+                clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 1);
+            }
+
+            S_clasificacion.actualizarClasificacion(clasifLocal);
+            S_clasificacion.actualizarClasificacion(clasifVisitante);
+
+        } catch (Exception e) {
+            System.out.println("Error al actualizar la clasificación: " + e.getMessage());
+        }
+        return "redirect:/partidos";
+    }
 }

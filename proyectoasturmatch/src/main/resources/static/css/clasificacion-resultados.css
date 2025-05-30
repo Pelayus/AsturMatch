@@ -192,9 +192,8 @@
 	font-size: 14px;
 	font-weight: 600;
 	cursor: pointer;
+	margin-left:130px;
 	transition: background-color 0.2s ease;
-	margin-left: auto;
-	justify-self: end;
 }
 
 .btn-guardar:hover {

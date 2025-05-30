@@ -38,6 +38,11 @@ public class ServicioClasificacionImpl implements ServicioClasificacion{
     public List<Clasificacion> obtenerClasificacionPorTorneo(Long torneoId) {
         return clasificacion_R.findByTorneoId(torneoId);
     }
+    
+    @Override
+    public Clasificacion obtenerClasificacionPorEquipoYTorneo(Equipo equipo, Torneo torneo) {
+        return clasificacion_R.findByEquipoAndTorneo(equipo, torneo);
+    }
 
     @Override
     public void actualizarClasificacion(Clasificacion clasificacion) {
