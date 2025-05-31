@@ -2,6 +2,9 @@ package com.asturmatch.proyectoasturmatch.servicios;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
+import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 
@@ -20,4 +23,6 @@ public interface ServicioTorneo {
     Torneo actualizarTorneo(Torneo torneo);
 
     void eliminarTorneo(Long id);
+    
+    List<Torneo> filtrarTorneos(String ubicacion, TipoTorneo tipoTorneo, TipoDeporte deporte);
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
+import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.TorneoRepository;
@@ -64,6 +67,15 @@ public class ServicioTorneoImpl implements ServicioTorneo {
         validarTorneo(torneo);
         return torneo_R.save(torneo);
     }
+    
+    public List<Torneo> filtrarTorneos(String ubicacion, TipoTorneo tipoTorneo, TipoDeporte deporte) {
+        return torneo_R.findAll().stream()
+            .filter(t -> ubicacion == null || ubicacion.isBlank() || t.getUbicacion().equalsIgnoreCase(ubicacion))
+            .filter(t -> tipoTorneo == null || t.getTipoTorneo() == tipoTorneo)
+            .filter(t -> deporte == null || t.getDeporte() == deporte)
+            .toList();
+    }
+
 
 
     private void validarTorneo(Torneo torneo) {

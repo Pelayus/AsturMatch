@@ -44,7 +44,7 @@ label {
     display: block;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
+input[type="text"], input[type="email"], input[type="date"], input[type="password"] {
     width: 100%;
     padding: 12px;
     font-size: 1.1em;

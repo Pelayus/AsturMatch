@@ -114,16 +114,16 @@ public class EquipoController {
 	public String crearEquipoPro(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
 			Model modelo) {
 		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-		
+
 		List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
-	    if (!equipoDelUsuario.isEmpty()) {
-	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
-	        System.err.println("No puedes crear un equipo porque ya perteneces a uno.");
-	        return "crear-equipo";
-	    }
-		
+		if (!equipoDelUsuario.isEmpty()) {
+			modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
+			return "crear-equipo";
+		}
+
+		Long idUsuarioActual = usuarioActual.getId();
 		usuarioActual.setRol(Rol.JUGADOR);
-		S_usuario.guardarUsuario(usuarioActual);
+		S_usuario.actualizarUsuario(idUsuarioActual, usuarioActual);
 
 		equipo.setJugadores(List.of(usuarioActual));
 		equipo.setTipoEquipo(TipoEquipo.PROFESIONAL);

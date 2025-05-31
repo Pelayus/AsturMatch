@@ -1,5 +1,6 @@
 package com.asturmatch.proyectoasturmatch.serviciosImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +81,8 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         String regexEmail = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         String regexNombre = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$";
         String regexPassword = "^(?=.*\\d)" + "(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?])" + ".{8,}$";
+        String regexDni = "^[0-9]{8}[A-Z]$";
+        String regexNombreUsuario = "^[a-zA-Z0-9_.-]{3,30}$";
         
         if (usuario.getEmail() == null || !usuario.getEmail().matches(regexEmail)) {
             throw new IllegalArgumentException("El email no tiene un formato válido");
@@ -91,6 +94,24 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
         if (usuario.getNombre() == null || !usuario.getNombre().matches(regexNombre)) {
             throw new IllegalArgumentException("El nombre solo puede contener letras y espacios");
+        }
+        
+        if (usuario.getNombreUsuario() == null || !usuario.getNombreUsuario().matches(regexNombreUsuario)) {
+            throw new IllegalArgumentException("El nombre de usuario debe tener entre 3 y 30 caracteres alfanuméricos.");
+        }
+        if (usuario_R.existsByNombreUsuario(usuario.getNombreUsuario())) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso.");
+        }
+        
+        if (usuario.getFechaNacimiento() == null || usuario.getFechaNacimiento().isAfter(LocalDate.now().minusYears(10))) {
+            throw new IllegalArgumentException("Debes tener al menos 10 años para registrarte.");
+        }
+        
+        if (usuario.getDni() == null || !usuario.getDni().matches(regexDni)) {
+            throw new IllegalArgumentException("El DNI debe tener el formato correcto: 8 números seguidos de una letra mayúscula.");
+        }
+        if (usuario_R.existsByDni(usuario.getDni())) {
+            throw new IllegalArgumentException("Este DNI ya está registrado.");
         }
 
         if (usuario.getContraseña() == null || !usuario.getContraseña().matches(regexPassword)) {

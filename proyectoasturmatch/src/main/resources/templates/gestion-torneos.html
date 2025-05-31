@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestión de Torneos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/gestion-equipos.css">
+<link rel="stylesheet" href="css/gestion-torneos.css">
 </head>
 <body>
 	<header>
@@ -28,6 +28,31 @@
 
 	<main>
 		<h1>Listado de Torneos</h1>
+
+		<form th:action="@{/gestion-torneos}" method="get">
+			<label for="ubicacion">Ubicación:</label> 
+			<input type="text" name="ubicacion" th:value="${ubicacion}" /> 
+			<label for="tipoTorneo">Tipo de Torneo:</label> 
+			<select name="tipoTorneo">
+				<option value="">-- Todos --</option>
+				<option th:each="tipo : ${tiposTorneo}" 
+				        th:value="${tipo}" 
+				        th:text="${tipo}" 
+				        th:selected="${tipo == tipoTorneo}">
+				</option>
+			</select> 
+			<label for="deporte">Deporte:</label> 
+			<select name="deporte">
+				<option value="">-- Todos --</option>
+				<option th:each="dep : ${tiposDeporte}" 
+				        th:value="${dep}"
+					    th:text="${dep}" 
+					    th:selected="${dep == deporte}">
+		        </option>
+			</select>
+
+			<button type="submit">Filtrar</button>
+		</form>
 
 		<table>
 			<thead>
