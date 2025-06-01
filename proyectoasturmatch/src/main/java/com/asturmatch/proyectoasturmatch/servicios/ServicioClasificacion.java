@@ -7,7 +7,9 @@ import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 
 public interface ServicioClasificacion {
 
-	void crearClasificacionParaTorneo(Torneo torneo);
+	void crearClasificacionParaTorneoFutbol(Torneo torneo);
+	
+	void crearClasificacionParaTorneoBaloncesto(Torneo torneo);
 
 	List<Clasificacion> obtenerClasificacionPorTorneo(Long torneoId);
 	

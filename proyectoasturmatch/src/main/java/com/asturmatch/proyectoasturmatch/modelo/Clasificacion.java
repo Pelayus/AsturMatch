@@ -25,8 +25,11 @@ public class Clasificacion implements Serializable{
 	private int pe;
 	private int pp;
 	private int puntos;
+	private int dif;
 	private int gf;
 	private int gc;
+	private int pf;
+	private int pc;
 	
 	@ManyToOne
     private Equipo equipo;
@@ -37,8 +40,10 @@ public class Clasificacion implements Serializable{
 	public Clasificacion() {
 		super();
 	}
+	
+	//CLASIFICACIÓN FÚTBOL
 
-	public Clasificacion(int pj, int pg, int pe, int pp, int puntos, int gf, int gc) {
+	public Clasificacion(int pj, int pg, int pe, int pp, int puntos, int gf, int gc, Equipo equipo, Torneo torneo) {
 		super();
 		this.pj = pj;
 		this.pg = pg;
@@ -47,6 +52,21 @@ public class Clasificacion implements Serializable{
 		this.puntos = puntos;
 		this.gf = gf;
 		this.gc = gc;
+	}
+	
+	//CLASIFICACIÓN BALONCESTO
+
+	public Clasificacion(Long id, int pj, int pg, int pp, int dif, int pf, int pc, Equipo equipo, Torneo torneo) {
+		super();
+		this.id = id;
+		this.pj = pj;
+		this.pg = pg;
+		this.pp = pp;
+		this.dif = dif;
+		this.pf = pf;
+		this.pc = pc;
+		this.equipo = equipo;
+		this.torneo = torneo;
 	}
 
 	public int getPj() {
@@ -89,6 +109,14 @@ public class Clasificacion implements Serializable{
 		this.puntos = puntos;
 	}
 
+	public int getDif() {
+		return dif;
+	}
+
+	public void setDif(int dif) {
+		this.dif = dif;
+	}
+
 	public int getGf() {
 		return gf;
 	}
@@ -121,4 +149,19 @@ public class Clasificacion implements Serializable{
 		this.torneo = torneo;
 	}
 
+	public int getPf() {
+		return pf;
+	}
+
+	public void setPf(int pf) {
+		this.pf = pf;
+	}
+
+	public int getPc() {
+		return pc;
+	}
+
+	public void setPc(int pc) {
+		this.pc = pc;
+	}
 }

@@ -103,7 +103,13 @@ public class TorneoController {
 	        S_partido.generarPartidosParaTorneo(torneoId);
 	        
 	        if (S_clasificacion.obtenerClasificacionPorTorneo(torneoId).isEmpty()) {
-	            S_clasificacion.crearClasificacionParaTorneo(torneo.get());
+	        	TipoDeporte deporte = torneo.get().getDeporte();
+	        	if(deporte==TipoDeporte.FUTBOL) {
+	        		S_clasificacion.crearClasificacionParaTorneoFutbol(torneo.get());
+	        	}else {
+	        		S_clasificacion.crearClasificacionParaTorneoBaloncesto(torneo.get());
+	        	}
+	            
 	        }
 	        
 	        redirectAttributes.addFlashAttribute("mensaje", "Partidos generados con éxito para el torneo ");

@@ -82,6 +82,10 @@ public class PartidoController {
         return "partidos";
     }
     
+    /*****************************************************/
+	/*         MÉTODOS PARA USUARIO ORGANIZADOR          */
+	/*****************************************************/
+    
     @PostMapping("/guardar-resultado")
     public String guardarResultado(@RequestParam Long partidoId,
                                    @RequestParam int puntuacionLocal,

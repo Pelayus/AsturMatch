@@ -33,51 +33,87 @@
 		<h1 class="clasificacion-resultados">Clasificación y Resultados</h1>
 		<div class="clasificacion-resultados-organizador">
 			<section class="seccion-clasificacion">
-			  <div th:each="torneo : ${misTorneos}">
-				<div th:if="${clasificacionesPorTorneo[torneo.id]}" class="contenedor-clasificacion">
-					<h2 class="titulo-clasificacion">Clasificación Torneo 1</h2>
-					<table class="tabla-clasificacion">
-						<thead>
-							<tr>
-								<th>Equipo</th>
-								<th>PJ</th>
-								<th>PG</th>
-								<th>PE</th>
-								<th>PP</th>
-								<th>GF</th>
-								<th>GC</th>
-								<th>Puntos</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
-								<td th:text="${fila.equipo.nombre}"></td>
-								<td th:text="${fila.pj}"></td>
-								<td th:text="${fila.pg}"></td>
-								<td th:text="${fila.pe}"></td>
-								<td th:text="${fila.pp}"></td>
-								<td th:text="${fila.gf}"></td>
-								<td th:text="${fila.gc}"></td>
-								<td th:text="${fila.puntos}"></td>
-							</tr>
-						</tbody>
-					</table>
+				<div th:each="torneo : ${misTorneos}">
+					<div th:if="${clasificacionesPorTorneo[torneo.id]}"
+						class="contenedor-clasificacion">
+						<h2 class="titulo-clasificacion"
+							th:text="'Clasificación ' + ${torneo.nombre}"></h2>
 
-					<div class="leyenda">
-						<div class="leyenda-izquierda">
-							<p>
-								<span class="punto-leyenda azul"></span> Primer clasificado
-							</p>
-							<p>
-								<span class="punto-leyenda naranja"></span> Podio
-							</p>
-							<p>
-								<span class="punto-leyenda rojo"></span> Último clasificado
-							</p>
+						<!-- CLASIFICACIÓN FÚTBOL -->
+						<div th:if="${torneo.deporte.name() == 'FUTBOL'}">
+							<table class="tabla-clasificacion">
+								<thead>
+									<tr>
+										<th>Equipo</th>
+										<th>PJ</th>
+										<th>PG</th>
+										<th>PE</th>
+										<th>PP</th>
+										<th>GF</th>
+										<th>GC</th>
+										<th>Puntos</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
+										<td th:text="${fila.equipo.nombre}"></td>
+										<td th:text="${fila.pj}"></td>
+										<td th:text="${fila.pg}"></td>
+										<td th:text="${fila.pe}"></td>
+										<td th:text="${fila.pp}"></td>
+										<td th:text="${fila.gf}"></td>
+										<td th:text="${fila.gc}"></td>
+										<td th:text="${fila.puntos}"></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
+
+						<!-- CLASIFICACIÓN BALONCESTO -->
+						<div th:if="${torneo.deporte.name() == 'BALONCESTO'}">
+							<table class="tabla-clasificacion">
+								<thead>
+									<tr>
+										<th>Equipo</th>
+										<th>PJ</th>
+										<th>PG</th>
+										<th>PP</th>
+										<th>PF</th>
+										<th>PC</th>
+										<th>DIF</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
+										<td th:text="${fila.equipo.nombre}"></td>
+										<td th:text="${fila.pj}"></td>
+										<td th:text="${fila.pg}"></td>
+										<td th:text="${fila.pp}"></td>
+										<td th:text="${fila.pf}"></td>
+										<td th:text="${fila.pc}"></td>
+										<td th:text="${fila.dif}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!-- Leyenda común -->
+						<div class="leyenda">
+							<div class="leyenda-izquierda">
+								<p>
+									<span class="punto-leyenda azul"></span> Primer clasificado
+								</p>
+								<p>
+									<span class="punto-leyenda naranja"></span> Podio
+								</p>
+								<p>
+									<span class="punto-leyenda rojo"></span> Último clasificado
+								</p>
+							</div>
+						</div>
+
 					</div>
 				</div>
-			  </div>
 			</section>
 			<section class="seccion-resultados">
 				<div class="contenedor-resultados">

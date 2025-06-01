@@ -18,7 +18,7 @@ public class ServicioClasificacionImpl implements ServicioClasificacion{
     private ClasificacionRepository clasificacion_R;
 
     @Override
-    public void crearClasificacionParaTorneo(Torneo torneo) {
+    public void crearClasificacionParaTorneoFutbol(Torneo torneo) {
         for (Equipo equipo : torneo.getEquipos()) {
             Clasificacion clasificacion = new Clasificacion();
             clasificacion.setEquipo(equipo);
@@ -30,6 +30,22 @@ public class ServicioClasificacionImpl implements ServicioClasificacion{
             clasificacion.setGf(0);
             clasificacion.setGc(0);
             clasificacion.setPuntos(0);
+            clasificacion_R.save(clasificacion);
+        }
+    }
+    
+    @Override
+    public void crearClasificacionParaTorneoBaloncesto(Torneo torneo) {
+        for (Equipo equipo : torneo.getEquipos()) {
+            Clasificacion clasificacion = new Clasificacion();
+            clasificacion.setEquipo(equipo);
+            clasificacion.setTorneo(torneo);
+            clasificacion.setPj(0);
+            clasificacion.setPg(0);
+            clasificacion.setPp(0);
+            clasificacion.setPf(0);
+            clasificacion.setPc(0);
+            clasificacion.setDif(0);
             clasificacion_R.save(clasificacion);
         }
     }
