@@ -22,17 +22,17 @@
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
 			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
-			<li th:if="${rol == 'ORGANIZADOR' && rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
+			<li th:if="${rol == 'ORGANIZADOR' || rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
 
 	<main>
-		<h2>Aquí puedes ver y crear tus torneos personalizados.</h2>
+		<h2 th:if="${rol != 'ORGANIZADOR'}">Aquí puedes ver y crear tus torneos personalizados.</h2>
 		<br>
 		<div class="opciones-torneos">
-			<div th:if="${rol != 'JUGADOR'}" class="opcion-torneo">
+			<div th:if="${rol != 'ORGANIZADOR' && rol != 'JUGADOR'}" class="opcion-torneo">
 				<button onclick="location.href='/crear-torneo'" class="boton-opcion">
 					<img src="media/crear-liga.png" alt="Crear Torneo" /> 
 					<span>Crea un Torneo con amigos</span>
@@ -69,11 +69,11 @@
 						<button type="submit" class="btn-editar">Guardar Cambios</button>
 					</form>
 
-					<form th:action="@{/torneos}" method="post">
+					<form th:if="${!partidosGenerados[torneo.id]}" th:action="@{/torneos}" method="post">
 						<input type="hidden" name="torneoId" th:value="${torneo.id}" />
-						<button type="submit" class="btn-generar">Generar
-							Partidos</button>
+						<button type="submit" class="btn-generar">Generar Partidos</button>
 					</form>
+					<p th:if="${partidosGenerados[torneo.id]}" class="info-generado">Partidos ya generados</p>
 				</div>
 			</div>
 			<p th:if="${error}" th:text="${error}" class="msg-error"></p>

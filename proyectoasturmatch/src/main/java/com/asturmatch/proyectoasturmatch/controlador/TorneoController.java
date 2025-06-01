@@ -22,6 +22,7 @@ import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
+import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
 import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
@@ -59,16 +60,26 @@ public class TorneoController {
 	private ServicioClasificacion S_clasificacion;
 	
 	@GetMapping("/torneos")
-    public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
-        List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        modelo.addAttribute("misTorneos", misTorneos);
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
-        return "torneos";
-    }
+	    List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
+
+	    Map<Long, Boolean> partidosGenerados = new HashMap<>();
+	    for (Torneo torneo : misTorneos) {
+	        boolean yaTienePartidos = !S_partido.obtenerPartidosPorTorneo(torneo).isEmpty();
+	        partidosGenerados.put(torneo.getId(), yaTienePartidos);
+	    }
+
+	    modelo.addAttribute("UsuarioActual", nombreUsuario);
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    modelo.addAttribute("misTorneos", misTorneos);
+	    modelo.addAttribute("rol", usuarioActual.getRol().toString());
+	    modelo.addAttribute("partidosGenerados", partidosGenerados);
+
+	    return "torneos";
+	}
+
 	
 	/**
      * Endpoint para que el organizador genere automáticamente los partidos de uno de sus torneos.
@@ -100,6 +111,12 @@ public class TorneoController {
 	    }
 
 	    try {
+	    	List<Partido> partidosExistentes = S_partido.obtenerPartidosPorTorneo(torneo.get());
+	    	if (!partidosExistentes.isEmpty()) {
+	    	    redirectAttributes.addFlashAttribute("error", "Los partidos ya han sido generados para este torneo.");
+	    	    return "redirect:/torneos";
+	    	}
+	        
 	        S_partido.generarPartidosParaTorneo(torneoId);
 	        
 	        if (S_clasificacion.obtenerClasificacionPorTorneo(torneoId).isEmpty()) {

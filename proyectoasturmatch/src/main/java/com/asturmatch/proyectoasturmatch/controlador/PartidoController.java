@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.asturmatch.proyectoasturmatch.modelo.Resultado;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
+import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioResultado;
 
 @Controller
@@ -118,7 +119,8 @@ public class PartidoController {
             resultado.setPuntuacionVisitante(puntuacionVisitante);
 
             S_resultado.guardarResultado(resultado);
-            actualizarClasificacion(partidoId, puntuacionLocal, puntuacionVisitante);
+         
+            actualizarClasificacionFutbol(partidoId, puntuacionLocal, puntuacionVisitante);
 
         } catch (Exception e) {
             System.out.println("Error al guardar el resultado: " + e.getMessage());
@@ -131,7 +133,7 @@ public class PartidoController {
     }
     
     @PostMapping("/actualizar-clasificacion")
-    public String actualizarClasificacion(@RequestParam Long partidoId,
+    public String actualizarClasificacionFutbol(@RequestParam Long partidoId,
                                           @RequestParam int puntuacionLocal,
                                           @RequestParam int puntuacionVisitante) {
         try {
@@ -148,31 +150,53 @@ public class PartidoController {
 
             Clasificacion clasifLocal = S_clasificacion.obtenerClasificacionPorEquipoYTorneo(equipoLocal, torneo);
             Clasificacion clasifVisitante = S_clasificacion.obtenerClasificacionPorEquipoYTorneo(equipoVisitante, torneo);
+            
+            if(torneo.getDeporte().equals(TipoDeporte.FUTBOL)) {
+            	clasifLocal.setPj(clasifLocal.getPj() + 1);
+                clasifVisitante.setPj(clasifVisitante.getPj() + 1);
 
-            clasifLocal.setPj(clasifLocal.getPj() + 1);
-            clasifVisitante.setPj(clasifVisitante.getPj() + 1);
+                clasifLocal.setGf(clasifLocal.getGf() + puntuacionLocal);
+                clasifLocal.setGc(clasifLocal.getGc() + puntuacionVisitante);
 
-            clasifLocal.setGf(clasifLocal.getGf() + puntuacionLocal);
-            clasifLocal.setGc(clasifLocal.getGc() + puntuacionVisitante);
+                clasifVisitante.setGf(clasifVisitante.getGf() + puntuacionVisitante);
+                clasifVisitante.setGc(clasifVisitante.getGc() + puntuacionLocal);
 
-            clasifVisitante.setGf(clasifVisitante.getGf() + puntuacionVisitante);
-            clasifVisitante.setGc(clasifVisitante.getGc() + puntuacionLocal);
-
-            if (puntuacionLocal > puntuacionVisitante) {
-                clasifLocal.setPg(clasifLocal.getPg() + 1);
-                clasifVisitante.setPp(clasifVisitante.getPp() + 1);
-                clasifLocal.setPuntos(clasifLocal.getPuntos() + 3);
-            } else if (puntuacionLocal < puntuacionVisitante) {
-                clasifVisitante.setPg(clasifVisitante.getPg() + 1);
-                clasifLocal.setPp(clasifLocal.getPp() + 1);
-                clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 3);
-            } else {
-                clasifLocal.setPe(clasifLocal.getPe() + 1);
-                clasifVisitante.setPe(clasifVisitante.getPe() + 1);
-                clasifLocal.setPuntos(clasifLocal.getPuntos() + 1);
-                clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 1);
+                if (puntuacionLocal > puntuacionVisitante) {
+                    clasifLocal.setPg(clasifLocal.getPg() + 1);
+                    clasifVisitante.setPp(clasifVisitante.getPp() + 1);
+                    clasifLocal.setPuntos(clasifLocal.getPuntos() + 3);
+                } else if (puntuacionLocal < puntuacionVisitante) {
+                    clasifVisitante.setPg(clasifVisitante.getPg() + 1);
+                    clasifLocal.setPp(clasifLocal.getPp() + 1);
+                    clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 3);
+                } else {
+                    clasifLocal.setPe(clasifLocal.getPe() + 1);
+                    clasifVisitante.setPe(clasifVisitante.getPe() + 1);
+                    clasifLocal.setPuntos(clasifLocal.getPuntos() + 1);
+                    clasifVisitante.setPuntos(clasifVisitante.getPuntos() + 1);
+                }
+            }else {
+            	clasifLocal.setPj(clasifLocal.getPj() + 1);
+                clasifVisitante.setPj(clasifVisitante.getPj() + 1);
+                
+                clasifLocal.setPf(clasifLocal.getPf() + puntuacionLocal);
+                clasifLocal.setPc(clasifLocal.getPc() + puntuacionVisitante);
+                clasifLocal.setDif(clasifLocal.getPf() - clasifLocal.getPc());
+                
+                
+                clasifVisitante.setPf(clasifVisitante.getPf() + puntuacionVisitante);
+                clasifVisitante.setPc(clasifVisitante.getPc() + puntuacionLocal);
+                clasifVisitante.setDif(clasifVisitante.getPf() - clasifVisitante.getPc());
+                
+                if (puntuacionLocal > puntuacionVisitante) {
+                    clasifLocal.setPg(clasifLocal.getPg() + 1);
+                    clasifVisitante.setPp(clasifVisitante.getPp() + 1);
+                } else if (puntuacionLocal < puntuacionVisitante) {
+                    clasifVisitante.setPg(clasifVisitante.getPg() + 1);
+                    clasifLocal.setPp(clasifLocal.getPp() + 1);
+                }
             }
-
+            
             S_clasificacion.actualizarClasificacion(clasifLocal);
             S_clasificacion.actualizarClasificacion(clasifVisitante);
 
