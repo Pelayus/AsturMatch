@@ -22,6 +22,11 @@ public class UsuarioController {
 	/*      INICIO DE SESIÓN Y REGISTRO DE USUARIOS      */
 	/*****************************************************/
 
+	@GetMapping("/iniciosesion")
+	public String mostrarFormularioLogin() {
+		return "iniciosesion";
+	}
+
 	@GetMapping("/registro")
 	public String mostrarFormularioRegistro(Model modelo) {
 		modelo.addAttribute("usuario", new Usuario());
@@ -39,26 +44,6 @@ public class UsuarioController {
 	    } catch (IllegalArgumentException e) {
 	        modelo.addAttribute("errorRegistro", e.getMessage());
 	        return "registro";
-	    }
-	}
-
-	@GetMapping("/iniciosesion")
-	public String mostrarFormularioLogin(Model modelo) {
-		modelo.addAttribute("usuario", new Usuario());
-		return "iniciosesion";
-	}
-
-	@PostMapping("/iniciosesion")
-	public String iniciarSesion(@ModelAttribute Usuario usuario, Model modelo) {
-	    Usuario usuarioAutenticado = usuarioServicio.obtenerUsuarioPorNombreUsuario(usuario.getNombreUsuario());
-	    if (usuarioAutenticado != null && usuarioAutenticado.getContraseña().equals(usuario.getContraseña())) {
-	        modelo.addAttribute("nombreUsuario", usuarioAutenticado.getNombre());
-	        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioAutenticado.getNombre()));
-	        return "redirect:/principal";
-	    } else {
-	        modelo.addAttribute("error", "Email o contraseña incorrectos");
-	        System.err.println("Email o contraseña incorrectos");
-	        return "iniciosesion";
 	    }
 	}
 	

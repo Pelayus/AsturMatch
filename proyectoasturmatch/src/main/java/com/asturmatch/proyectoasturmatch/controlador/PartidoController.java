@@ -18,7 +18,6 @@ import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioClasificacion;
-import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;

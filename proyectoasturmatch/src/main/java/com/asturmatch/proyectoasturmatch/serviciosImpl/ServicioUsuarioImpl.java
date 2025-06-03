@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
@@ -19,6 +20,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
     @Autowired
     private UsuarioRepository usuario_R;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,7 +61,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
             usuarioAdmin.setNombreUsuario("admin");
             usuarioAdmin.setNombre("Admin");
             usuarioAdmin.setEmail("admin@admin.com");
-            usuarioAdmin.setContraseña("admin");
+            usuarioAdmin.setContraseña(passwordEncoder.encode("admin"));
             usuarioAdmin.setRol(Rol.ADMIN);
             usuarioAdmin = usuario_R.save(usuarioAdmin);
 
@@ -128,6 +132,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
             );
         }
 
+        usuario.setContraseña(passwordEncoder.encode(usuario.getContraseña()));
         return usuario_R.save(usuario);
     }
 
