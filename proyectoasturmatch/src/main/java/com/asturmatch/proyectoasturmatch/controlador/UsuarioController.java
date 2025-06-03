@@ -50,7 +50,7 @@ public class UsuarioController {
 
 	@PostMapping("/iniciosesion")
 	public String iniciarSesion(@ModelAttribute Usuario usuario, Model modelo) {
-	    Usuario usuarioAutenticado = usuarioServicio.obtenerUsuarioPorEmail(usuario.getEmail());
+	    Usuario usuarioAutenticado = usuarioServicio.obtenerUsuarioPorNombreUsuario(usuario.getNombreUsuario());
 	    if (usuarioAutenticado != null && usuarioAutenticado.getContraseña().equals(usuario.getContraseña())) {
 	        modelo.addAttribute("nombreUsuario", usuarioAutenticado.getNombre());
 	        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioAutenticado.getNombre()));

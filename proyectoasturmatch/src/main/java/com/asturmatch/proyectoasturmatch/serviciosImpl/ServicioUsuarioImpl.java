@@ -31,6 +31,12 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     public Optional<Usuario> obtenerUsuarioPorId(Long id) {
         return usuario_R.findById(id);
     }
+
+    @Override
+    @Transactional
+    public Usuario obtenerUsuarioPorNombreUsuario(String nombreUsuario) {
+    return usuario_R.findByNombreUsuario(nombreUsuario);
+    }
     
     @Override
     @Transactional
@@ -48,6 +54,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
         Usuario admin = usuario_R.findByNombre("admin");
         if (admin == null) {
             Usuario usuarioAdmin = new Usuario();
+            usuarioAdmin.setNombreUsuario("admin");
             usuarioAdmin.setNombre("Admin");
             usuarioAdmin.setEmail("admin@admin.com");
             usuarioAdmin.setContraseña("admin");

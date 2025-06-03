@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -17,15 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
 import com.asturmatch.proyectoasturmatch.modelo.Partido;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
-import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
 import com.asturmatch.proyectoasturmatch.modelo.TipoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Torneo;
@@ -76,6 +72,7 @@ public class TorneoController {
 	    modelo.addAttribute("misTorneos", misTorneos);
 	    modelo.addAttribute("rol", usuarioActual.getRol().toString());
 	    modelo.addAttribute("partidosGenerados", partidosGenerados);
+		modelo.addAttribute("estadosTorneo", EstadoTorneo.values());
 
 	    return "torneos";
 	}
@@ -144,6 +141,7 @@ public class TorneoController {
 	                           @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
 	                           @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
 	                           @RequestParam String ubicacion,
+							   @RequestParam EstadoTorneo estado,
 	                           RedirectAttributes redirectAttributes) {
 	    Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
 	    
@@ -151,6 +149,7 @@ public class TorneoController {
 	    torneo.setFechaInicio(fechaInicio);
 	    torneo.setFechaFin(fechaFin);
 	    torneo.setUbicacion(ubicacion);
+		torneo.setEstado(estado);
 	    
 	    S_torneo.guardarTorneo(torneo);
 	    redirectAttributes.addFlashAttribute("mensaje", "Torneo actualizado con éxito.");

@@ -55,16 +55,23 @@
 					<p th:text="'Deporte: ' + ${torneo.deporte}"></p>
 
 					<form th:action="@{/torneos/editar}" method="post">
-						<input type="hidden" name="torneoId" th:value="${torneo.id}" /> <label
-							for="fechaInicio">Fecha Inicio:</label> <input type="date"
-							id="fechaInicio" name="fechaInicio"
-							th:value="${#temporals.format(torneo.fechaInicio, 'yyyy-MM-dd')}"
-							required /> <label for="fechaFin">Fecha Fin:</label> <input
-							type="date" id="fechaFin" name="fechaFin"
-							th:value="${#temporals.format(torneo.fechaFin, 'yyyy-MM-dd')}"
-							required /> <label for="ubicacion">Ubicación:</label> <input
-							type="text" id="ubicacion" name="ubicacion"
-							th:value="${torneo.ubicacion}" required />
+						<input type="hidden" name="torneoId" th:value="${torneo.id}" /> 
+						<label for="fechaInicio">Fecha Inicio:</label> 
+						<input type="date" id="fechaInicio" name="fechaInicio" 
+						th:value="${#temporals.format(torneo.fechaInicio, 'yyyy-MM-dd')}" required /> 
+						<label for="fechaFin">Fecha Fin:</label> 
+						<input type="date" id="fechaFin" name="fechaFin" 
+						th:value="${#temporals.format(torneo.fechaFin, 'yyyy-MM-dd')}" required /> 
+						<label for="ubicacion">Ubicación:</label> 
+						<input type="text" id="ubicacion" name="ubicacion" th:value="${torneo.ubicacion}" required />
+						<label for="estado">Estado:</label>
+						<select id="estado" name="estado">
+							<option th:each="estado : ${estadosTorneo}" 
+							        th:value="${estado}" 
+									th:text="${estado}"
+								    th:selected="${estado} == ${torneo.estado}">
+							</option>
+						</select>
 
 						<button type="submit" class="btn-editar">Guardar Cambios</button>
 					</form>
