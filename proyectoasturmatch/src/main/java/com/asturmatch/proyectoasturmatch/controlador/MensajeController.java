@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
 import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
@@ -21,7 +25,7 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class MensajeController {
 	
 	@Autowired
@@ -34,9 +38,10 @@ public class MensajeController {
 	private ServicioEquipo S_equipo;
 	
 	@GetMapping("/mensajes")
-	public String mensajes(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-	    
-	    Usuario emisor = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String mensajes(Model modelo) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Usuario emisor = detallesUsuario.getUsuario();
 	    List<Equipo> equipos = S_equipo.obtenerEquipoPorUsuario(emisor);
 
 	    Equipo equipo = equipos.get(0);
@@ -47,9 +52,9 @@ public class MensajeController {
 	    List<Mensaje> mensajesRecibidos = S_mensaje.obtenerMensajesRecibidos(emisor);
 
 	    modelo.addAttribute("companeros", companeros);
-	    modelo.addAttribute("UsuarioActual", nombreUsuario);
+	    modelo.addAttribute("UsuarioActual", emisor.getNombreUsuario());
 	    modelo.addAttribute("mensajesRecibidos", mensajesRecibidos);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(emisor.getNombreUsuario()));
         modelo.addAttribute("rol", emisor.getRol().toString());
 
 	    return "mensajes";
@@ -76,7 +81,9 @@ public class MensajeController {
 	                            @RequestParam Long receptorId,
 	                            @RequestParam String contenido,
 	                            Model modelo) {
-	    Usuario emisor = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Usuario emisor = detallesUsuario.getUsuario();
 	    Optional <Usuario> receptorOptional = S_usuario.obtenerUsuarioPorId(receptorId);
 	    Usuario receptor = receptorOptional.get();
 

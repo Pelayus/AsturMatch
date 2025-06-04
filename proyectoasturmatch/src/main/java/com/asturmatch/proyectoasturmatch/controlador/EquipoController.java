@@ -4,22 +4,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
-import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
 import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class EquipoController {
 
 	@Autowired
@@ -33,23 +36,28 @@ public class EquipoController {
 	/*****************************************************/
 	
 	@GetMapping("/equipos")
-    public String equipos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+    public String equipos(Model modelo) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Usuario usuarioActual = detallesUsuario.getUsuario();
 		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
-    	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-    	
-    	modelo.addAttribute("equipos", equiposAmateur);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
+
+		modelo.addAttribute("equipos", equiposAmateur);
+		modelo.addAttribute("nombreUsuario", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
+		modelo.addAttribute("rol", usuarioActual.getRol().toString());
         return "equipos";
     }
 
 	@GetMapping("/crear-equipo")
-	public String mostrarFormularioCrearEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	public String mostrarFormularioCrearEquipo(Model modelo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+
 		modelo.addAttribute("equipo", new Equipo());
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
 		return "crear-equipo";
 	}
@@ -64,9 +72,10 @@ public class EquipoController {
 	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
 	 */
 	@PostMapping("/crear-equipo")
-	public String crearEquipo(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
-	                          Model modelo) {
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String crearEquipo(@ModelAttribute Equipo equipo, Model modelo) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 	    
 	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (!equipoDelUsuario.isEmpty()) {
@@ -91,11 +100,14 @@ public class EquipoController {
 
 	
 	@GetMapping("/crear-equipopro")
-	public String mostrarFormularioCrearEquipoPro(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	public String mostrarFormularioCrearEquipoPro(Model modelo) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+
 		modelo.addAttribute("equipo", new Equipo());
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
 		return "crear-equipopro";
 	}
@@ -111,9 +123,11 @@ public class EquipoController {
 	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
 	 */
 	@PostMapping("/crear-equipopro")
-	public String crearEquipoPro(@ModelAttribute Equipo equipo, @ModelAttribute("nombreUsuario") String nombreUsuario,
+	public String crearEquipoPro(@ModelAttribute Equipo equipo,
 			Model modelo) {
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 
 		List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 		if (!equipoDelUsuario.isEmpty()) {
@@ -137,13 +151,15 @@ public class EquipoController {
 	}
 	
 	@GetMapping("/unirse-equipo")
-	public String mostrarEquiposAmateur(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-	    List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String mostrarEquiposAmateur(Model modelo) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
 	    
 	    modelo.addAttribute("equipos", equiposAmateur);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
 	    return "unirse-equipo";
 	}
@@ -158,9 +174,10 @@ public class EquipoController {
 	 *         o a "unirse-equipo" con un mensaje de error si el usuario ya está en el equipo o el equipo no existe.
 	 */
 	@PostMapping("/unirse-equipo")
-	public String unirseAEquipo(@ModelAttribute("nombreUsuario") String nombreUsuario,
-	                            @ModelAttribute("equipoId") Long equipoId, Model modelo) {
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String unirseAEquipo(@ModelAttribute("equipoId") Long equipoId, Model modelo) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 	    
 	    Optional<Equipo> equipoOptional = S_equipo.obtenerEquipoPorId(equipoId);
 
@@ -193,13 +210,15 @@ public class EquipoController {
 	/*****************************************************/
 	
 	@GetMapping("/gestion-equipos")
-	public String gestionEquipos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	public String gestionEquipos(Model modelo) {
 		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 
 		modelo.addAttribute("equipos", equiposAmateur);
-		modelo.addAttribute("UsuarioActual", nombreUsuario);
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 		modelo.addAttribute("rol", usuarioActual.getRol().toString());
 		return "gestion-equipos";
 	}

@@ -12,7 +12,7 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 import org.springframework.stereotype.Controller;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class UsuarioController {
 
 	@Autowired

@@ -12,6 +12,7 @@ import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.UsuarioRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -55,6 +56,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     
     @PostConstruct
     public void crearAdminSiNoExiste() {
+    try {
         Usuario admin = usuario_R.findByNombre("admin");
         if (admin == null) {
             Usuario usuarioAdmin = new Usuario();
@@ -62,14 +64,20 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
             usuarioAdmin.setNombre("Admin");
             usuarioAdmin.setEmail("admin@admin.com");
             usuarioAdmin.setContraseña(passwordEncoder.encode("admin"));
+            usuarioAdmin.setDni("12345678A");
+            usuarioAdmin.setFechaNacimiento(LocalDate.of(2000, 1, 1));
             usuarioAdmin.setRol(Rol.ADMIN);
-            usuarioAdmin = usuario_R.save(usuarioAdmin);
-
+            usuario_R.save(usuarioAdmin);
             System.out.println("Administrador creado con éxito.");
         } else {
             System.out.println("El usuario administrador ya existe.");
         }
+    } catch (Exception e) {
+        System.err.println("❌ Error al crear admin: " + e.getMessage());
+        e.printStackTrace();
     }
+}
+
 
     /**
      * Guardamos un nuevo usuario tras validar:

@@ -7,11 +7,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Clasificacion;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Partido;
@@ -29,7 +33,7 @@ import com.asturmatch.proyectoasturmatch.modelo.TipoDeporte;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioResultado;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class PartidoController {
 	
 	@Autowired
@@ -50,8 +54,10 @@ public class PartidoController {
     private static final DateTimeFormatter HORA_FORMAT = DateTimeFormatter.ofPattern("dd.MM. HH:mm");
     
     @GetMapping("/partidos")
-    public String partidos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-    	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+    public String partidos(Model modelo) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
     	List<Torneo> misTorneos = null;
     	
 		if (usuarioActual.getRol().equals(Rol.ORGANIZADOR)) {
@@ -74,8 +80,8 @@ public class PartidoController {
             ));
         
         modelo.addAttribute("clasificacionesPorTorneo", clasificacionesPorTorneo);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
         modelo.addAttribute("partidosPorJornada", partidosPorJornada);
         modelo.addAttribute("rol", usuarioActual.getRol().toString());
         modelo.addAttribute("misTorneos", misTorneos);

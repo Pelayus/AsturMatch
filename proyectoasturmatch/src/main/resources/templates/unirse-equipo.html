@@ -10,12 +10,16 @@
 <body>
 	<header>
 		<div class="usuario">
-			<button class="icono-usuario" id="BotonUsuario"
-				th:text="${InicialUsuario}"></button>
-			<div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
-				<p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
-			</div>
-		</div>
+        <button class="icono-usuario" id="BotonUsuario"
+            th:text="${InicialUsuario}"></button>
+        <div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
+            <p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+        </div>
 		<h1>UNIRSE EQUIPO</h1>
 	</header>
 

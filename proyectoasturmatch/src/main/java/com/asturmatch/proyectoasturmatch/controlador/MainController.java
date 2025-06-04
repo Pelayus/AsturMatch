@@ -14,7 +14,7 @@ import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class MainController {
 	
 	@Autowired
@@ -25,12 +25,13 @@ public class MainController {
 	/*******************************************/
 
     @GetMapping("/principal")
-	public String mostrarPaginaPrincipal(Model modelo) {
+	public String mostrarPaginaPrincipal(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
 		Usuario usuarioActual = detallesUsuario.getUsuario();
 
 		modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("nombreUsuario", usuarioActual.getNombreUsuario());
 		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 		modelo.addAttribute("rol", usuarioActual.getRol().toString());
 
@@ -43,10 +44,13 @@ public class MainController {
     
     @GetMapping("/contacto")
     public String contacto(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-    	Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
-        modelo.addAttribute("UsuarioActual", nombreUsuario);
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Usuario usuarioActual = detallesUsuario.getUsuario();
+
+		modelo.addAttribute("nombreUsuario", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
+		modelo.addAttribute("rol", usuarioActual.getRol().toString());
         return "contacto";
     }
     

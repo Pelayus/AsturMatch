@@ -48,8 +48,8 @@ public class ConfiguracionSecurity {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/iniciosesion", "/registro", "/css/**", "/js/**", "/img/**").permitAll()
                 .requestMatchers("/gestion-torneos", "/gestion-equipos").hasRole("ADMIN")
-                .requestMatchers("/torneos","/partidos").hasAnyRole("ORGANIZADOR","JUGADOR")
-                .requestMatchers("/torneos").hasRole("USUARIO")
+                .requestMatchers("/partidos").hasAnyRole("ORGANIZADOR","JUGADOR")
+                .requestMatchers("/torneos", "/contacto").hasAnyRole("USUARIO", "ORGANIZADOR", "JUGADOR")
                 .requestMatchers("/principal").hasAnyRole("USUARIO", "ORGANIZADOR", "JUGADOR", "ADMIN")
                 .anyRequest().authenticated()
             )

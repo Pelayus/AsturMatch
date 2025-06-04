@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.EstadoTorneo;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
@@ -34,7 +38,7 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
 
 @Controller
-@SessionAttributes("nombreUsuario")
+@SessionAttributes({"nombreUsuario", "UsuarioActual"})
 public class TorneoController {
 
 	@Autowired
@@ -56,8 +60,10 @@ public class TorneoController {
 	private ServicioClasificacion S_clasificacion;
 	
 	@GetMapping("/torneos")
-	public String torneos(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String torneos(Model modelo) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 
 	    List<Torneo> misTorneos = S_torneo.obtenerTorneosPorCreador(usuarioActual);
 
@@ -67,8 +73,8 @@ public class TorneoController {
 	        partidosGenerados.put(torneo.getId(), yaTienePartidos);
 	    }
 
-	    modelo.addAttribute("UsuarioActual", nombreUsuario);
-	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 	    modelo.addAttribute("misTorneos", misTorneos);
 	    modelo.addAttribute("rol", usuarioActual.getRol().toString());
 	    modelo.addAttribute("partidosGenerados", partidosGenerados);
@@ -88,10 +94,11 @@ public class TorneoController {
      * @return Redirección a la vista "gestion-torneos" con mensaje de éxito o error.
      */
 	@PostMapping("/torneos")
-	public String generarPartidos(@ModelAttribute("nombreUsuario") String nombreUsuario,
-	                              @RequestParam Long torneoId,
+	public String generarPartidos(@RequestParam Long torneoId,
 	                              RedirectAttributes redirectAttributes) {
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 	    Optional<Torneo> torneo = S_torneo.obtenerTorneoPorId(torneoId);
 
 	    if (torneo.isEmpty() || !torneo.get().getCreador().getId().equals(usuarioActual.getId())) {
@@ -136,8 +143,7 @@ public class TorneoController {
 	}
 
 	@PostMapping("/torneos/editar")
-	public String editarTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario,
-	                           @RequestParam Long torneoId,
+	public String editarTorneo(@RequestParam Long torneoId,
 	                           @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
 	                           @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
 	                           @RequestParam String ubicacion,
@@ -157,10 +163,14 @@ public class TorneoController {
 	}
 
 	@GetMapping("/crear-torneo")
-	public String mostrarFormularioCrearTorneo(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
+	public String mostrarFormularioCrearTorneo(Model modelo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+
 		modelo.addAttribute("torneo", new Torneo());
-		modelo.addAttribute("UsuarioActual", nombreUsuario);
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+		modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 		return "crear-torneo";
 	}
 
@@ -173,8 +183,10 @@ public class TorneoController {
 	 * @return Redirección a "/torneos" si la creación es exitosa.
 	 */
 	@PostMapping("/crear-torneo")
-	public String crearTorneo(@ModelAttribute Torneo torneo, @ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-		Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	public String crearTorneo(@ModelAttribute Torneo torneo, Model modelo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 
 		Long idUsuarioActual = usuarioActual.getId();
 		usuarioActual.setRol(Rol.ORGANIZADOR);
@@ -204,9 +216,13 @@ public class TorneoController {
 	}
 
 	@GetMapping("/unirse-torneo")
-	public String listarTorneosDisponibles(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-		modelo.addAttribute("UsuarioActual", nombreUsuario);
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	public String listarTorneosDisponibles(Model modelo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+
+		modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 		modelo.addAttribute("torneos", S_torneo.obtenerTodosTorneos());
 		return "unirse-torneo";
 	}
@@ -220,12 +236,13 @@ public class TorneoController {
 	 * @return La vista "unirse-torneo" con un mensaje de éxito o error, según corresponda.
 	 */
 	@PostMapping("/unirse-torneo")
-	public String unirseATorneo(@ModelAttribute("nombreUsuario") String nombreUsuario,
-	                            @ModelAttribute("torneoId") Long torneoId, Model modelo) {
-	    modelo.addAttribute("UsuarioActual", nombreUsuario);
-	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	public String unirseATorneo(@ModelAttribute("torneoId") Long torneoId, Model modelo) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
 
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
+	    modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 
 	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 	    if (equipoDelUsuario == null || equipoDelUsuario.isEmpty()) {
@@ -275,18 +292,19 @@ public class TorneoController {
 	
 	@GetMapping("/gestion-torneos")
 	public String gestionTorneos(
-	        @ModelAttribute("nombreUsuario") String nombreUsuario,
 	        @RequestParam(required = false) String ubicacion,
 	        @RequestParam(required = false) TipoTorneo tipoTorneo,
 	        @RequestParam(required = false) TipoDeporte deporte,
 	        Model modelo) {
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+        Usuario usuarioActual = detallesUsuario.getUsuario();
+		
 	    List<Torneo> torneos = S_torneo.filtrarTorneos(ubicacion, tipoTorneo, deporte);
-	    Usuario usuarioActual = S_usuario.obtenerUsuarioPorNombre(nombreUsuario);
 
 	    modelo.addAttribute("torneos", torneos);
-	    modelo.addAttribute("UsuarioActual", nombreUsuario);
-	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(nombreUsuario));
+	    modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
+	    modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
 	    modelo.addAttribute("rol", usuarioActual.getRol().toString());
 	    modelo.addAttribute("ubicacion", ubicacion);
 	    modelo.addAttribute("tipoTorneo", tipoTorneo);
