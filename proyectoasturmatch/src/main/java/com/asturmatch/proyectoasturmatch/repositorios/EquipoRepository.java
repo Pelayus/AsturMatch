@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
+import com.asturmatch.proyectoasturmatch.modelo.Torneo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 
 public interface EquipoRepository extends JpaRepository<Equipo, Long>{
@@ -18,5 +19,8 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long>{
 	List<Equipo> findByJugadores(Usuario usuario);
 	
 	List<Equipo> findByTipoEquipo(TipoEquipo tipo);
+
+	List<Equipo> findByTorneo(Torneo torneo);
+
 
 }

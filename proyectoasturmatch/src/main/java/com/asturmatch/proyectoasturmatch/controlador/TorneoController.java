@@ -150,22 +150,60 @@ public class TorneoController {
 
 	@PostMapping("/torneos/editar")
 	public String editarTorneo(@RequestParam Long torneoId,
-	                           @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-	                           @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-	                           @RequestParam String ubicacion,
-							   @RequestParam EstadoTorneo estado,
-	                           RedirectAttributes redirectAttributes) {
-	    Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
-	    
-	    Torneo torneo = torneoOpt.get();
-	    torneo.setFechaInicio(fechaInicio);
-	    torneo.setFechaFin(fechaFin);
-	    torneo.setUbicacion(ubicacion);
+			@RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+			@RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+			@RequestParam String ubicacion,
+			@RequestParam EstadoTorneo estado,
+			RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+
+		Optional<Torneo> torneoOpt = S_torneo.obtenerTorneoPorId(torneoId);
+		if (torneoOpt.isEmpty()) {
+			redirectAttributes.addFlashAttribute("error", "Torneo no encontrado.");
+			return "redirect:/torneos";
+		}
+
+		Torneo torneo = torneoOpt.get();
+		torneo.setFechaInicio(fechaInicio);
+		torneo.setFechaFin(fechaFin);
+		torneo.setUbicacion(ubicacion);
 		torneo.setEstado(estado);
-	    
-	    S_torneo.guardarTorneo(torneo);
-	    redirectAttributes.addFlashAttribute("mensaje", "Torneo actualizado con éxito.");
-	    return "redirect:/torneos";
+
+		if (estado == EstadoTorneo.FINALIZADO) {
+			Usuario creador = torneo.getCreador();
+			creador.setRol(Rol.USUARIO);
+			S_usuario.actualizarUsuario(creador.getId(), creador);
+
+			Optional<Usuario> optionalUsuario = S_usuario.obtenerUsuarioPorId(creador.getId());
+			if (optionalUsuario.isPresent()) {
+				Usuario usuarioActualizado = optionalUsuario.get();
+
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				UserDetails nuevoUserDetails = new DetallesUsuario(usuarioActualizado);
+				Authentication nuevaAuth = new UsernamePasswordAuthenticationToken(
+						nuevoUserDetails,
+						auth.getCredentials(),
+						nuevoUserDetails.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(nuevaAuth);
+
+				HttpSession session = request.getSession(false);
+				if (session != null) {
+					session.setAttribute(
+							HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+							SecurityContextHolder.getContext());
+				}
+			}
+
+			List<Equipo> equiposAsociados = S_equipo.obtenerEquiposPorTorneo(torneo);
+			for (Equipo equipo : equiposAsociados) {
+				equipo.setTorneo(null);
+				S_equipo.guardarEquipo(equipo);
+			}
+		}
+
+		S_torneo.guardarTorneo(torneo);
+		redirectAttributes.addFlashAttribute("mensaje", "Torneo actualizado con éxito.");
+		return "redirect:/torneos";
 	}
 
 	@GetMapping("/crear-torneo")

@@ -43,6 +43,9 @@ public class ServicioEquipoImpl implements ServicioEquipo {
         return equipo_R.findByTipoEquipo(tipo);
     }
 
+    public List<Equipo> obtenerEquiposPorTorneo(Torneo torneo) {
+    return equipo_R.findByTorneo(torneo);
+   }
 
     @Override
     @Transactional

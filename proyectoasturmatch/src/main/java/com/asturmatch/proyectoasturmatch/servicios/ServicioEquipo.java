@@ -18,6 +18,8 @@ public interface ServicioEquipo {
     
     List<Equipo> obtenerEquiposPorTipo(TipoEquipo tipo);
 
+    List<Equipo> obtenerEquiposPorTorneo(Torneo torneo);
+
     Equipo guardarEquipo(Equipo equipo);
     
     Equipo modificarEquipo(Equipo equipo);
