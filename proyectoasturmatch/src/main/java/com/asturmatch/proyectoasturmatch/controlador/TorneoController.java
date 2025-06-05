@@ -8,8 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +39,9 @@ import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioPartido;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioTorneo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes({"nombreUsuario", "UsuarioActual"})
@@ -166,11 +172,13 @@ public class TorneoController {
 	public String mostrarFormularioCrearTorneo(Model modelo) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
+		Long idUsuario = detallesUsuario.getUsuario().getId();
+
+		Optional<Usuario> usuarioActual = S_usuario.obtenerUsuarioPorId(idUsuario);
 
 		modelo.addAttribute("torneo", new Torneo());
-		modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
+		modelo.addAttribute("UsuarioActual", usuarioActual.get().getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.get().getNombreUsuario()));
 		return "crear-torneo";
 	}
 
@@ -183,35 +191,56 @@ public class TorneoController {
 	 * @return Redirección a "/torneos" si la creación es exitosa.
 	 */
 	@PostMapping("/crear-torneo")
-	public String crearTorneo(@ModelAttribute Torneo torneo, Model modelo) {
+	public String crearTorneo(@ModelAttribute Torneo torneo, Model modelo, HttpServletRequest request) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
-
+		Usuario usuarioActual = detallesUsuario.getUsuario();
 		Long idUsuarioActual = usuarioActual.getId();
+
 		usuarioActual.setRol(Rol.ORGANIZADOR);
-	    S_usuario.actualizarUsuario(idUsuarioActual,usuarioActual);
+		S_usuario.actualizarUsuario(idUsuarioActual, usuarioActual);
+
+		Optional<Usuario> optionalUsuario = S_usuario.obtenerUsuarioPorId(idUsuarioActual);
+		if (optionalUsuario.isEmpty()) {
+			modelo.addAttribute("error", "No se pudo actualizar el rol del usuario.");
+			return "crear-torneo";
+		}
+
+		Usuario usuarioActualizado = optionalUsuario.get();
+
+		UserDetails nuevoUserDetails = new DetallesUsuario(usuarioActualizado);
+		Authentication nuevaAuth = new UsernamePasswordAuthenticationToken(
+				nuevoUserDetails,
+				auth.getCredentials(),
+				nuevoUserDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(nuevaAuth);
+
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute(
+					HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+					SecurityContextHolder.getContext());
+		}
 
 		torneo.setEstado(EstadoTorneo.PENDIENTE);
 		torneo.setTipoTorneo(TipoTorneo.AMATEUR);
-		torneo.setCreador(usuarioActual);
+		torneo.setCreador(usuarioActualizado);
 		S_torneo.guardarTorneo(torneo);
-		
+
 		Mensaje mensaje = new Mensaje();
-		mensaje.setUsuario(usuarioActual);
+		mensaje.setUsuario(usuarioActualizado);
 		mensaje.setTorneo(torneo);
 		mensaje.setTipoMensaje(TipoMensaje.NOTIFICACIONES_TORNEO);
 		mensaje.setFechaCreacion(LocalDateTime.now());
-		mensaje.setContenido(usuarioActual.getNombre() + " ha creado un torneo llamado '" 
-		    + torneo.getNombre() + "' de " + torneo.getDeporte() + 
-		    " los días " + torneo.getFechaInicio() + " - " + torneo.getFechaFin() +
-		    " en " + torneo.getUbicacion() + ".");
-
+		mensaje.setContenido(usuarioActualizado.getNombre() + " ha creado un torneo llamado '"
+				+ torneo.getNombre() + "' de " + torneo.getDeporte() +
+				" los días " + torneo.getFechaInicio() + " - " + torneo.getFechaFin() +
+				" en " + torneo.getUbicacion() + ".");
 		S_mensaje.guardarMensaje(mensaje);
 
-
 		modelo.addAttribute("mensaje", "Torneo creado con éxito. Ahora eres el ORGANIZADOR.");
-		System.out.println("Torneo creado con éxito. Ahora eres el ORGANIZADOR.");
+		System.out.println("✅ Torneo creado con éxito. Rol actualizado a ORGANIZADOR");
+
 		return "redirect:/torneos";
 	}
 

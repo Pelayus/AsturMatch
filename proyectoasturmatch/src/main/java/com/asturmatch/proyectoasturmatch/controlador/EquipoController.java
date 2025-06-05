@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,9 @@ import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes({"nombreUsuario", "UsuarioActual"})
@@ -53,12 +59,15 @@ public class EquipoController {
 	public String mostrarFormularioCrearEquipo(Model modelo) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
+		Long idUsuario = detallesUsuario.getUsuario().getId();
+
+		Optional<Usuario> usuarioActualizado = S_usuario.obtenerUsuarioPorId(idUsuario);
 
 		modelo.addAttribute("equipo", new Equipo());
-        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
+		modelo.addAttribute("UsuarioActual", usuarioActualizado.get().getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActualizado.get().getNombreUsuario()));
+		modelo.addAttribute("rol", usuarioActualizado.get().getRol().toString());
+
 		return "crear-equipo";
 	}
 
@@ -72,62 +81,10 @@ public class EquipoController {
 	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
 	 */
 	@PostMapping("/crear-equipo")
-	public String crearEquipo(@ModelAttribute Equipo equipo, Model modelo) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
-	    
-	    List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
-	    if (!equipoDelUsuario.isEmpty()) {
-	        modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
-	        return "crear-equipo";
-	    }
-	    
-	    Long idUsuarioActual = usuarioActual.getId();
-	    usuarioActual.setRol(Rol.JUGADOR);
-	    S_usuario.actualizarUsuario(idUsuarioActual,usuarioActual);
-
-	    equipo.setJugadores(List.of(usuarioActual));
-	    equipo.setTipoEquipo(TipoEquipo.AMATEUR);
-	    equipo.setTorneo(null);
-	    equipo.setFechaCreacion(LocalDate.now());
-
-	    S_equipo.guardarEquipo(equipo);
-
-	    modelo.addAttribute("mensaje", "Equipo creado con éxito");
-	    return "redirect:/equipos";
-	}
-
-	
-	@GetMapping("/crear-equipopro")
-	public String mostrarFormularioCrearEquipoPro(Model modelo) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
-
-		modelo.addAttribute("equipo", new Equipo());
-        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
-		return "crear-equipopro";
-	}
-
-	
-	/**
-	 * Creo un nuevo equipo profesional si el usuario no pertenece ya a otro equipo.
-	 *
-	 * @param equipo Objeto equipo con los datos ingresados.
-	 * @param nombreUsuario Nombre del usuario actual.
-	 * @param modelo Modelo de datos para la vista.
-	 * @return Redirección a "/equipos" si la creación es exitosa,
-	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
-	 */
-	@PostMapping("/crear-equipopro")
-	public String crearEquipoPro(@ModelAttribute Equipo equipo,
-			Model modelo) {
+	public String crearEquipo(@ModelAttribute Equipo equipo, Model modelo, HttpServletRequest request) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
+		Usuario usuarioActual = detallesUsuario.getUsuario();
 
 		List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
 		if (!equipoDelUsuario.isEmpty()) {
@@ -139,11 +96,104 @@ public class EquipoController {
 		usuarioActual.setRol(Rol.JUGADOR);
 		S_usuario.actualizarUsuario(idUsuarioActual, usuarioActual);
 
-		equipo.setJugadores(List.of(usuarioActual));
+		Optional<Usuario> optionalUsuario = S_usuario.obtenerUsuarioPorId(idUsuarioActual);
+		if (optionalUsuario.isEmpty()) {
+			modelo.addAttribute("error", "Error al actualizar el rol del usuario.");
+			return "crear-equipo";
+		}
+
+		Usuario usuarioActualizado = optionalUsuario.get();
+
+		UserDetails nuevoUserDetails = new DetallesUsuario(usuarioActualizado);
+		Authentication nuevaAuth = new UsernamePasswordAuthenticationToken(
+				nuevoUserDetails,
+				auth.getCredentials(),
+				nuevoUserDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(nuevaAuth);
+
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute(
+					HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+					SecurityContextHolder.getContext());
+		}
+
+		equipo.setJugadores(List.of(usuarioActualizado));
+		equipo.setTipoEquipo(TipoEquipo.AMATEUR);
+		equipo.setTorneo(null);
+		equipo.setFechaCreacion(LocalDate.now());
+		S_equipo.guardarEquipo(equipo);
+
+		modelo.addAttribute("mensaje", "Equipo creado con éxito");
+		return "redirect:/equipos";
+	}
+	
+	@GetMapping("/crear-equipopro")
+	public String mostrarFormularioCrearEquipoPro(Model modelo) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Long idUsuario = detallesUsuario.getUsuario().getId();
+
+		Optional<Usuario> usuarioActualizado = S_usuario.obtenerUsuarioPorId(idUsuario);
+
+		modelo.addAttribute("equipo", new Equipo());
+		modelo.addAttribute("UsuarioActual", usuarioActualizado.get().getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActualizado.get().getNombreUsuario()));
+		modelo.addAttribute("rol", usuarioActualizado.get().getRol().toString());
+		return "crear-equipopro";
+	}
+	
+	/**
+	 * Creo un nuevo equipo profesional si el usuario no pertenece ya a otro equipo.
+	 *
+	 * @param equipo Objeto equipo con los datos ingresados.
+	 * @param nombreUsuario Nombre del usuario actual.
+	 * @param modelo Modelo de datos para la vista.
+	 * @return Redirección a "/equipos" si la creación es exitosa,
+	 *         o la vista "crear-equipo" con un mensaje de error si el usuario ya pertenece a un equipo.
+	 */
+	@PostMapping("/crear-equipopro")
+	public String crearEquipoPro(@ModelAttribute Equipo equipo, Model modelo, HttpServletRequest request) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
+		Usuario usuarioActual = detallesUsuario.getUsuario();
+
+		List<Equipo> equipoDelUsuario = S_equipo.obtenerEquipoPorUsuario(usuarioActual);
+		if (!equipoDelUsuario.isEmpty()) {
+			modelo.addAttribute("error", "No puedes crear un equipo porque ya perteneces a uno.");
+			return "crear-equipopro";
+		}
+
+		Long idUsuarioActual = usuarioActual.getId();
+		usuarioActual.setRol(Rol.JUGADOR);
+		S_usuario.actualizarUsuario(idUsuarioActual, usuarioActual);
+
+		Optional<Usuario> optionalUsuario = S_usuario.obtenerUsuarioPorId(idUsuarioActual);
+		if (optionalUsuario.isEmpty()) {
+			modelo.addAttribute("error", "Error al actualizar el rol del usuario.");
+			return "crear-equipopro";
+		}
+
+		Usuario usuarioActualizado = optionalUsuario.get();
+
+		UserDetails nuevoUserDetails = new DetallesUsuario(usuarioActualizado);
+		Authentication nuevaAuth = new UsernamePasswordAuthenticationToken(
+				nuevoUserDetails,
+				auth.getCredentials(),
+				nuevoUserDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(nuevaAuth);
+
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute(
+					HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+					SecurityContextHolder.getContext());
+		}
+
+		equipo.setJugadores(List.of(usuarioActualizado));
 		equipo.setTipoEquipo(TipoEquipo.PROFESIONAL);
 		equipo.setTorneo(null);
 		equipo.setFechaCreacion(LocalDate.now());
-
 		S_equipo.guardarEquipo(equipo);
 
 		modelo.addAttribute("mensaje", "Equipo creado con éxito");
@@ -152,16 +202,20 @@ public class EquipoController {
 	
 	@GetMapping("/unirse-equipo")
 	public String mostrarEquiposAmateur(Model modelo) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
+		Long idUsuario = detallesUsuario.getUsuario().getId();
+
+		Optional <Usuario> usuarioActualizado = S_usuario.obtenerUsuarioPorId(idUsuario);
+
 		List<Equipo> equiposAmateur = S_equipo.obtenerEquiposPorTipo(TipoEquipo.AMATEUR);
-	    
-	    modelo.addAttribute("equipos", equiposAmateur);
-        modelo.addAttribute("UsuarioActual", usuarioActual.getNombreUsuario());
-        modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
-        modelo.addAttribute("rol", usuarioActual.getRol().toString());
-	    return "unirse-equipo";
+
+		modelo.addAttribute("equipos", equiposAmateur);
+		modelo.addAttribute("UsuarioActual", usuarioActualizado.get().getNombreUsuario());
+		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActualizado.get().getNombreUsuario()));
+		modelo.addAttribute("rol", usuarioActualizado.get().getRol().toString());
+
+		return "unirse-equipo";
 	}
 	
 	/**
@@ -174,36 +228,59 @@ public class EquipoController {
 	 *         o a "unirse-equipo" con un mensaje de error si el usuario ya está en el equipo o el equipo no existe.
 	 */
 	@PostMapping("/unirse-equipo")
-	public String unirseAEquipo(@ModelAttribute("equipoId") Long equipoId, Model modelo) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	public String unirseAEquipo(@ModelAttribute("equipoId") Long equipoId, Model modelo, HttpServletRequest request) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-        Usuario usuarioActual = detallesUsuario.getUsuario();
-	    
-	    Optional<Equipo> equipoOptional = S_equipo.obtenerEquipoPorId(equipoId);
+		Usuario usuarioActual = detallesUsuario.getUsuario();
+		Long idUsuario = usuarioActual.getId();
 
-	    // Verificar si el equipo existe
-	    if (equipoOptional.isEmpty()) {
-	        modelo.addAttribute("error", "El equipo no existe.");
-	        return "redirect:/unirse-equipo";
-	    }
+		Optional<Equipo> equipoOptional = S_equipo.obtenerEquipoPorId(equipoId);
 
-	    Equipo equipo = equipoOptional.get();
+		if (equipoOptional.isEmpty()) {
+			modelo.addAttribute("error", "El equipo no existe.");
+			return "redirect:/unirse-equipo";
+		}
 
-	    // Verificar si el usuario ya está en el equipo
-	    if (equipo.getJugadores().contains(usuarioActual)) {
-	        modelo.addAttribute("error", "Ya eres parte de este equipo.");
-	        return "redirect:/unirse-equipo";
-	    }
+		Equipo equipo = equipoOptional.get();
 
-	    equipo.getJugadores().add(usuarioActual);
-	    S_equipo.guardarEquipo(equipo);
-	    
-	    usuarioActual.setRol(Rol.JUGADOR);
-	    S_usuario.actualizarUsuario(usuarioActual.getId(), usuarioActual); 
+		if (equipo.getJugadores().contains(usuarioActual)) {
+			modelo.addAttribute("error", "Ya eres parte de este equipo.");
+			return "redirect:/unirse-equipo";
+		}
 
-	    modelo.addAttribute("mensaje", "Te has unido al equipo con éxito.");
-	    return "redirect:/equipos";
+		equipo.getJugadores().add(usuarioActual);
+		S_equipo.guardarEquipo(equipo);
+
+		usuarioActual.setRol(Rol.JUGADOR);
+		S_usuario.actualizarUsuario(idUsuario, usuarioActual);
+		Optional<Usuario> optionalUsuario = S_usuario.obtenerUsuarioPorId(idUsuario);
+		if (optionalUsuario.isEmpty()) {
+			modelo.addAttribute("error", "Error al actualizar el rol del usuario.");
+			return "redirect:/unirse-equipo";
+		}
+
+		Usuario usuarioActualizado = optionalUsuario.get();
+
+		UserDetails nuevoUserDetails = new DetallesUsuario(usuarioActualizado);
+		Authentication nuevaAuth = new UsernamePasswordAuthenticationToken(
+				nuevoUserDetails,
+				auth.getCredentials(),
+				nuevoUserDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(nuevaAuth);
+
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute(
+					HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+					SecurityContextHolder.getContext());
+		}
+
+		modelo.addAttribute("mensaje", "Te has unido al equipo con éxito. Ahora eres JUGADOR.");
+		System.out.println("✅ Usuario se unió al equipo. Rol actualizado a JUGADOR");
+
+		return "redirect:/equipos";
 	}
+
 	
 	/*****************************************************/
 	/*         MÉTODOS PARA USUARIO ADMINISTRADOR        */
