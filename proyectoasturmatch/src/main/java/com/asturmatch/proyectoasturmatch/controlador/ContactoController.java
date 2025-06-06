@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;

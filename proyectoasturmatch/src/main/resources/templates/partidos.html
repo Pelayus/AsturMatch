@@ -60,7 +60,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
+									<tr th:each="fila, iterStat : ${clasificacionesPorTorneo[torneo.id]}" th:class="${iterStat.index == 0 ? 'primer-clasificado' 
+								               : (iterStat.index < 3 ? 'podio' 
+								               : (iterStat.last ? 'ultimo-clasificado' : ''))}">
 										<td th:text="${fila.equipo.nombre}"></td>
 										<td th:text="${fila.pj}"></td>
 										<td th:text="${fila.pg}"></td>
@@ -71,6 +73,7 @@
 										<td th:text="${fila.puntos}"></td>
 									</tr>
 								</tbody>
+
 							</table>
 						</div>
 
@@ -89,7 +92,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="fila : ${clasificacionesPorTorneo[torneo.id]}">
+									<tr th:each="fila, iterStat : ${clasificacionesPorTorneo[torneo.id]}" th:class="${iterStat.index == 0 ? 'primer-clasificado' 
+								               : (iterStat.index < 3 ? 'podio' 
+								               : (iterStat.last ? 'ultimo-clasificado' : ''))}">
 										<td th:text="${fila.equipo.nombre}"></td>
 										<td th:text="${fila.pj}"></td>
 										<td th:text="${fila.pg}"></td>

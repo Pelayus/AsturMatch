@@ -1,6 +1,7 @@
 package com.asturmatch.proyectoasturmatch.controlador;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +70,23 @@ public class PartidoController {
     	Map<Long, List<Clasificacion>> clasificacionesPorTorneo = new HashMap<>();
         for (Torneo torneo : misTorneos) {
             List<Clasificacion> clasificaciones = S_clasificacion.obtenerClasificacionPorTorneo(torneo.getId());
+
+            if (torneo.getDeporte().equals(TipoDeporte.FUTBOL)) {
+                // Orden fútbol
+                clasificaciones.sort(
+                        Comparator.comparingInt(Clasificacion::getPuntos).reversed()
+                                .thenComparingInt(Clasificacion::getGf).reversed()
+                                .thenComparingInt(Clasificacion::getGc).reversed()
+                );
+            } else if (torneo.getDeporte().equals(TipoDeporte.BALONCESTO)) {
+                // Orden baloncesto
+                clasificaciones.sort(
+                        Comparator.comparingInt(Clasificacion::getPg).reversed()
+                                .thenComparingInt(Clasificacion::getDif).reversed()
+                                .thenComparingInt(Clasificacion::getPf).reversed()
+                );
+            }
+
             clasificacionesPorTorneo.put(torneo.getId(), clasificaciones);
         }
         
@@ -105,21 +123,16 @@ public class PartidoController {
                 System.out.println("Partido no encontrado con ID: " + partidoId);
                 return "redirect:/partidos";
             }
-
-            //Obtenemos el nombre de los equipos que dispuntan el partido
             Partido partido = optionalPartido.get();
             local = partido.getEquipoLocal().getNombre();
             visitante = partido.getEquipoVisitante().getNombre();
             
-            //Obtenemos el resultado que pasa el administrador del torneo(único con permiso de pasar el resultado)
             Resultado resultado = partido.getResultado();
 
             if (resultado == null) {
                 resultado = new Resultado();
                 resultado.setPartido(partido);
             }
-
-            //Obtenemos la como va el marcador del partido y lo guardamos en BD 
             resultado.setPuntuacionLocal(puntuacionLocal);
             resultado.setPuntuacionVisitante(puntuacionVisitante);
 
