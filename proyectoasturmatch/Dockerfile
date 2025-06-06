@@ -1,5 +1,6 @@
 # Etapa 1: build con MavenAdd commentMore actions
 FROM eclipse-temurin:21-jdk AS build
+
 WORKDIR /app
 
 # Copiar solo el pom.xml primero para aprovechar cache de docker
