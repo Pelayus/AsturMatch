@@ -3,7 +3,10 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 # Copiar el código fuente
-COPY . .
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
 
 # Ejecutar mvnw para compilar
 RUN chmod +x ./mvnw && ./mvnw clean package -DskipTests
@@ -20,5 +23,4 @@ VOLUME /tmp
 COPY --from=build /app/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
 
