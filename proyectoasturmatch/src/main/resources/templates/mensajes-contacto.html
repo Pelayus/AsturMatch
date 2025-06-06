@@ -25,8 +25,9 @@
 
 	<nav>
 		<ul class="nav-menu">
-			<li><a href="/principal">Inicio</a></li>
+            <li><a href="/principal">Inicio</a></li>
 			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-torneos">Gestión de Torneos</a></li>
+			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-equipos">Gestión de Equipos</a></li>
 		</ul>
 	</nav>
 

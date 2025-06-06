@@ -33,6 +33,7 @@
 			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-equipos">Gestión de Equipos</a></li>
 			<li th:if="${rol == 'ORGANIZADOR' || rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
 			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
+			<li th:if="${rol == 'ADMIN'}"><a href="/mensajes-contacto">Mensajes de Contacto</a></li>
 			<li th:if="${rol != 'ADMIN'}"><a href="/contacto">Contacto</a></li>
 		</ul>
 	</nav>
