@@ -37,22 +37,6 @@ public class MainController {
 
 		return "principal";
 	}
-
-    /*******************************************/
-	/*    LLAMADA A LA PANTALLA DE CONTACTO    */
-	/*******************************************/
-    
-    @GetMapping("/contacto")
-    public String contacto(@ModelAttribute("nombreUsuario") String nombreUsuario, Model modelo) {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		DetallesUsuario detallesUsuario = (DetallesUsuario) auth.getPrincipal();
-		Usuario usuarioActual = detallesUsuario.getUsuario();
-
-		modelo.addAttribute("nombreUsuario", usuarioActual.getNombreUsuario());
-		modelo.addAttribute("InicialUsuario", obtenerPrimeraLetra(usuarioActual.getNombreUsuario()));
-		modelo.addAttribute("rol", usuarioActual.getRol().toString());
-        return "contacto";
-    }
     
     /************************************/
 	/*       MÉTODOS DE AYUDA           */

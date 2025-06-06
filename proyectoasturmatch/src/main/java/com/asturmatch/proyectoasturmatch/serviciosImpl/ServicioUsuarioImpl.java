@@ -53,6 +53,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     public Usuario obtenerUsuarioPorNombre(String nombre) {
         return usuario_R.findByNombre(nombre);
     }
+
+    @Transactional
+    public Usuario obtenerUsuarioPorRol(Rol rol) {
+        return usuario_R.findByRol(rol);
+    }
     
     @PostConstruct
     public void crearAdminSiNoExiste() {

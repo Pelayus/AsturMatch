@@ -2,6 +2,8 @@ package com.asturmatch.proyectoasturmatch.servicios;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.asturmatch.proyectoasturmatch.modelo.Rol;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 
 public interface ServicioUsuario {
@@ -15,6 +17,8 @@ public interface ServicioUsuario {
     Usuario obtenerUsuarioPorNombreUsuario(String nombreUsuario);
     
     Usuario obtenerUsuarioPorNombre(String nombre);
+
+    Usuario obtenerUsuarioPorRol(Rol rol);
 
     Usuario guardarUsuario(Usuario usuario);
 

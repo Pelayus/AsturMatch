@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contacto</title>
+<title>Gestion de Equipos - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
-<link rel="stylesheet" href="css/contacto.css">
+<link rel="stylesheet" href="css/mensajes-contacto.css">
 </head>
 <body>
 	<header>
-	   <div class="usuario">
+		<div class="usuario">
         <button class="icono-usuario" id="BotonUsuario"
             th:text="${InicialUsuario}"></button>
         <div class="datosUsuario-desplegados" id="DatosUsuarioDesplegable">
@@ -20,36 +20,31 @@
             </form>
         </div>
         </div>
-		<h1>Contacto</h1>
+		<h1>GESTIÓN DE EQUIPOS</h1>
 	</header>
 
 	<nav>
 		<ul class="nav-menu">
 			<li><a href="/principal">Inicio</a></li>
-			<li th:if="${rol != 'ADMIN'}"><a href="/torneos">Torneos</a></li>
-			<li th:if="${rol == 'USUARIO'}"><a href="/equipos">Equipos</a></li>
-			<li th:if="${rol == 'ORGANIZADOR' || rol == 'JUGADOR'}"><a href="/partidos">Partidos</a></li>
-			<li th:if="${rol == 'JUGADOR'}"><a href="/mensajes">Mensajes</a></li>
+			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-torneos">Gestión de Torneos</a></li>
 		</ul>
 	</nav>
 
+    <main>
+        <h2>Mensajes de Contacto</h2>
+    
+        <div th:if="${mensajes.isEmpty()}">
+            <p>No hay mensajes nuevos.</p>
+        </div>
+    
+        <ul th:each="mensaje : ${mensajes}">
+            <li>
+                <strong th:text="${#temporals.format(mensaje.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></strong><br>
+                <pre th:text="${mensaje.contenido}"></pre>
+            </li>
+        </ul>
+    </main>
 
-	<main>
-		<h2>Estamos aquí para ayudarte</h2>
-		<p>Por favor, completa el siguiente formulario para ponerte en
-			contacto con nosotros.</p>
-		<form action="/contactar" method="POST">
-			<ul>
-				<li><label for="name">Nombre:</label><br> <input
-					type="text" id="name" name="name" required></li>
-				<li><label for="email">Correo Electrónico:</label><br> <input
-					type="email" id="email" name="email" required></li>
-				<li><label for="message">Mensaje:</label><br> <textarea
-						id="message" name="message" rows="5" required></textarea></li>
-			</ul>
-			<button type="submit" class="button">Enviar</button>
-		</form>
-	</main>
 
 	<footer>
 		<p class="telefonocontacto">+34 608 65 53 49</p>
@@ -61,7 +56,7 @@
 		</div>
 		<p>&copy; 2025 AsturMatch. Todos los derechos reservados.</p>
 	</footer>
-	
+
 	<script src="js/asturmatch.js"></script>
 </body>
 </html>

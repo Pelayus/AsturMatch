@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.asturmatch.proyectoasturmatch.modelo.Mensaje;
+import com.asturmatch.proyectoasturmatch.modelo.TipoMensaje;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.repositorios.MensajeRepository;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioMensaje;
@@ -33,4 +34,9 @@ public class ServicioMensajeImpl implements ServicioMensaje {
     public List<Mensaje> obtenerMensajesRecibidos(Usuario receptor) {
         return mensaje_R.findByReceptorOrderByFechaCreacionDesc(receptor);
     }
+
+    public List<Mensaje> obtenerMensajesPorReceptorYTipo(Usuario receptor, TipoMensaje tipo) {
+    return mensaje_R.findByReceptorAndTipoMensajeOrderByFechaCreacionDesc(receptor, tipo);
+    }
+
 }
