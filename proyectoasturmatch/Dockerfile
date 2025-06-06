@@ -1,28 +1,31 @@
 # Etapa 1: build con Maven
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-
+FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 # Copiar solo el pom.xml primero para aprovechar cache de docker
 COPY pom.xml .
+COPY .mvn .mvn
+COPY mvnw .
 
-# Copiar el resto del código fuente (asumiendo que está en src/)
-COPY src ./src
+# Ejecutar mvnw para descargar dependencias
+RUN chmod +x ./mvnw && ./mvnw dependency:go-offline
 
-# Construir el proyecto (sin tests)
-RUN mvn clean package -DskipTests
+# Copiar el resto del código fuente
+COPY src src
+RUN ./mvnw clean package -DskipTests
 
 # Etapa 2: imagen final
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
+WORKDIR /
 
-WORKDIR /app
+# Exponer el puerto 8080
+EXPOSE 8080
+VOLUME /tmp
 
 # Copiar el .jar generado desde la etapa de build
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8080
-
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 
 
