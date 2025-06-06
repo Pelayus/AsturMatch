@@ -11,4 +11,4 @@ COPY target/*.jar app.jar
 EXPOSE 8080
 
 # Ejecuta la app usando el puerto dinámico de Render
-ENTRYPOINT ["java", "-Dserver.port=$PORT", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]
