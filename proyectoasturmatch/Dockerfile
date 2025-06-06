@@ -1,14 +1,13 @@
 FROM eclipse-temurin:21-jdk AS build
-
 WORKDIR /app
 
 # Copiar el código fuente
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
-COPY src src
+COPY .mvn .mvn
+COPY mvnw .
 
 # Ejecutar mvnw para compilar
+COPY src src
 RUN chmod +x ./mvnw && ./mvnw clean package -DskipTests
 
 # Etapa 2: imagen final
