@@ -1,5 +1,5 @@
-# Etapa 1: build con Maven
-FROM eclipse-temurin:17-jdk AS build
+# Etapa 1: build con MavenAdd commentMore actions
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 # Copiar solo el pom.xml primero para aprovechar cache de docker
@@ -15,7 +15,7 @@ COPY src src
 RUN ./mvnw clean package -DskipTests
 
 # Etapa 2: imagen final
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 WORKDIR /
 
 # Exponer el puerto 8080
