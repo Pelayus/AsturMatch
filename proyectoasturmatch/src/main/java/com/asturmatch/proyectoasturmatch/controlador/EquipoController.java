@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
 import com.asturmatch.proyectoasturmatch.configuracion.DetallesUsuario;
 import com.asturmatch.proyectoasturmatch.modelo.Equipo;
 import com.asturmatch.proyectoasturmatch.modelo.Rol;
@@ -23,7 +22,6 @@ import com.asturmatch.proyectoasturmatch.modelo.TipoEquipo;
 import com.asturmatch.proyectoasturmatch.modelo.Usuario;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioEquipo;
 import com.asturmatch.proyectoasturmatch.servicios.ServicioUsuario;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -125,7 +123,7 @@ public class EquipoController {
 		S_equipo.guardarEquipo(equipo);
 
 		modelo.addAttribute("mensaje", "Equipo creado con éxito");
-		return "redirect:/equipos";
+		return "redirect:/torneos";
 	}
 	
 	@GetMapping("/crear-equipopro")
@@ -197,7 +195,7 @@ public class EquipoController {
 		S_equipo.guardarEquipo(equipo);
 
 		modelo.addAttribute("mensaje", "Equipo creado con éxito");
-		return "redirect:/equipos";
+		return "redirect:/torneos";
 	}
 	
 	@GetMapping("/unirse-equipo")
@@ -278,7 +276,7 @@ public class EquipoController {
 		modelo.addAttribute("mensaje", "Te has unido al equipo con éxito. Ahora eres JUGADOR.");
 		System.out.println("✅ Usuario se unió al equipo. Rol actualizado a JUGADOR");
 
-		return "redirect:/equipos";
+		return "redirect:/torneos";
 	}
 
 	

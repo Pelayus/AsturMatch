@@ -49,6 +49,7 @@ public class ConfiguracionSecurity {
                 .requestMatchers("/iniciosesion", "/registro", "/css/**", "/js/**", "/img/**").permitAll()
                 .requestMatchers("/gestion-torneos", "/gestion-equipos", "/mensajes-contacto").hasRole("ADMIN")
                 .requestMatchers("/equipos", "/unirse-equipo", "/crear-equipo", "/crear-equipopro", "/crear-torneo").hasRole("USUARIO")
+                .requestMatchers("/mensajes").hasRole("JUGADOR")
                 .requestMatchers("/partidos").hasAnyRole("ORGANIZADOR","JUGADOR")
                 .requestMatchers("/torneos", "/contacto").hasAnyRole("USUARIO", "ORGANIZADOR", "JUGADOR")
                 .requestMatchers("/principal").hasAnyRole("USUARIO", "ORGANIZADOR", "JUGADOR", "ADMIN")
