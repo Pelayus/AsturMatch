@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crear Torneos - AsturMatch</title>
+<title>Unirse a un Torneo - AsturMatch</title>
 <link rel="stylesheet" href="css/asturmatch.css">
 <link rel="stylesheet" href="css/unirse-torneo.css">
 </head>
@@ -16,7 +16,7 @@
             <p th:text="'Tu Usuario: ' + ${UsuarioActual}"></p>
 
             <form th:action="@{/logout}" method="post">
-                <button type="submit">Cerrar sesión</button>
+                <button type="submit" class="btn-cerrar-sesion">Cerrar sesión</button>
             </form>
         </div>
         </div>

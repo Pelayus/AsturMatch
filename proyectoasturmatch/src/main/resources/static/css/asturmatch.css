@@ -46,6 +46,22 @@ header h1 {
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
+.btn-cerrar-sesion{
+    background-color: #bbbe13;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #ffff01;
+}
+
 .usuario {
     position: relative;
     display: block;

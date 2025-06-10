@@ -1,9 +1,12 @@
-/*header {
+header {
 	background-image: url('../media/header_principal.png');
 	background-size: cover;
 	background-position: center;
 	color: black;
-}*/
+	padding: 120px 40px;
+	box-shadow: var(--sombra-caja);
+	margin: 0;
+}
 
 main {
     padding: 40px 20px;
