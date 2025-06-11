@@ -24,7 +24,8 @@
 	</header>
 
 	<nav>
-		<ul class="nav-menu">
+		<button class="nav-toggle" id="navToggle">&#9776;</button>
+		<ul class="nav-menu" id="navMenu">
             <li><a href="/principal">Inicio</a></li>
 			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-torneos">Gestión de Torneos</a></li>
 			<li th:if="${rol == 'ADMIN'}"><a href="/gestion-equipos">Gestión de Equipos</a></li>

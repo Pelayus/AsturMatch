@@ -17,3 +17,12 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
+
+// Toggle menu de navegación para moviles
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+
+navToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
+

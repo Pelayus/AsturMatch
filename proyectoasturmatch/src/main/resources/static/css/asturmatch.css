@@ -37,13 +37,23 @@ header {
 	padding: 120px 40px;
 	box-shadow: var(--sombra-caja);
 	margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 header h1 {
 	color: yellow;
-	font-size: 6em;
+	font-size: 4em;
+    margin: 20px 0 10px 0;
 	text-align:center;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+header p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 .btn-cerrar-sesion{
@@ -63,12 +73,11 @@ header h1 {
 }
 
 .usuario {
+    align-self: flex-end;
+    margin: 20px 20px 0 0;
     position: relative;
-    display: block;
+    float: none;
     text-align: right;
-    float: right;
-    margin-right: 80px;
-    margin-top: -60px;
 }
 
 .icono-usuario {
@@ -108,11 +117,22 @@ header h1 {
     color: var(--color-texto-oscuro);
 }
 
+.nav-toggle {
+    display: none;
+    font-size: 28px;
+    background: none;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #1B4D89;
+}
 
 .nav-menu {
     list-style: none;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 30px;
     margin: 0;
     padding: 15px 0;
@@ -207,4 +227,76 @@ footer {
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
+}
+
+@media screen and (max-width: 992px) {
+    header {
+        padding: 80px 20px;
+    }
+
+    header h1 {
+        font-size: 3em;
+    }
+
+    .icono-usuario {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3em;
+    }
+
+    .btn-cerrar-sesion {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px 0;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .usuario {
+        align-self: center;
+        margin: 10px 0;
+    }
+
+    header h1 {
+        font-size: 2.2em;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    .datosUsuario-desplegados {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        min-width: unset;
+    }
+
+    .btn-cerrar-sesion {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    header {
+        padding: 50px 10px;
+    }
 }
